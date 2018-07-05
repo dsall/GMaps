@@ -1,12 +1,36 @@
 import React from "react";
 import {TouchableOpacity, Button, KeyboardAvoidingView, StyleSheet, Text, TextInput, View, Image } from 'react-native';
-import { Container, Header, Content, Form, Item, Input, Label , Icon} from 'native-base';
+import {Form, Item, Input, Label } from 'native-base';
+import * as firebase from 'firebase';
+
 
 const gmapslogo = require("../../Images/gmapslogo.png");
 
 
 
 export default class SignupForm extends React.Component {
+ 
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+      phone: '',
+      password: '',
+      rppassword: '',
+    };
+}
+
+
+onSignupPress = () => {
+  if (this.state.password !== this.state.rppassword) {
+      Alert.alert("Passwords do not match");
+      return;
+  }
+
+  firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then(() => { }, (error) => { Alert.alert(error.message); });
+}
 
 render() {
     return (
@@ -21,27 +45,48 @@ render() {
           <View style={styles.container2}>
           <Form style={styles.form}>
               <Item floatingLabel>
-                <Label>Username</Label>
-                <Input underlineColorAndroid='transparent' autoCapitalize="none" />
-              </Item>
-              <Item floatingLabel>
                 <Label>Email</Label>
-                <Input underlineColorAndroid='transparent' autoCapitalize="none" />
+                <Input 
+                underlineColorAndroid='transparent' 
+                autoCapitalize="none" 
+                onChangeText={email => this.setState({ email })}
+                value={this.state.email}
+                />
               </Item>
               <Item floatingLabel>
                 <Label>Phone Number</Label>
-                <Input underlineColorAndroid='transparent' autoCapitalize="none" />
+                <Input 
+                underlineColorAndroid='transparent' 
+                autoCapitalize="none" 
+                onChangeText={phone => this.setState({ phone })}
+                value={this.state.phone}
+                />
               </Item>
               <Item secureTextEntry floatingLabel last>
                 <Label>Password</Label>
-                <Input secureTextEntry={true} underlineColorAndroid='transparent' autoCapitalize="none" />
+                <Input 
+                secureTextEntry={true} 
+                underlineColorAndroid='transparent' 
+                autoCapitalize="none" 
+                onChangeText={password => this.setState({ password })}
+                value={this.state.password}
+                />
               </Item>
               <Item floatingLabel last>
                 <Label>Repeat Password</Label>
-                <Input secureTextEntry={true} underlineColorAndroid='transparent' autoCapitalize="none" />
+                <Input 
+                secureTextEntry={true} 
+                underlineColorAndroid='transparent' 
+                autoCapitalize="none" 
+                onChangeText={rppassword => this.setState({ rppassword })}
+                value={this.state.rppassword}
+                />
               </Item>
             </Form>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity 
+            style={styles.button}
+            onPress={this.onSignupPress}
+            >
                   <Text style={styles.buttonText}>Create your account</Text>
             </TouchableOpacity>
             <TouchableOpacity

@@ -20,15 +20,19 @@
   },
   "dependencies": {
     "expo": "^27.0.1",
+    "firebase": "^5.2.0",
     "native-base": "^2.6.1",
     "react": "16.3.1",
     "react-native": "~0.55.2",
     "react-native-camera": "^1.1.4",
+    "react-native-camera-kit": "^6.2.4",
     "react-native-firebase": "^4.2.0",
     "react-native-linear-gradient": "^2.4.0",
     "react-native-maps": "^0.21.0",
     "react-native-phone-input": "^0.2.1",
+    "react-native-swiper": "^1.5.13",
     "react-native-vector-icons": "^4.6.0",
-    "react-navigation": "^2.5.5"
+    "react-navigation": "^2.5.5",
+    "react-phone-number-input": "^1.1.12"
   }
 }

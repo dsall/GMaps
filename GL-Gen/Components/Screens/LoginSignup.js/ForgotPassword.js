@@ -1,21 +1,23 @@
-import React from "react";
 
-import {TouchableOpacity, KeyboardAvoidingView, StyleSheet, Text,  View, Image, Alert } from 'react-native';
+import {TouchableOpacity, Alert, KeyboardAvoidingView, StyleSheet, Text,  View, Image } from 'react-native';
 import {  Form, Item, Input, Label } from 'native-base';
-import * as firebase from 'firebase';
+import React from 'react';
 const gmapslogo = require("../../Images/gmapslogo.png");
+import * as firebase from 'firebase';
 
-
-export default class LoginForm extends React.Component {
+export default class ForgotPassword extends React.Component {
   
 state = {
     email: '',
-    password: '',
   }
 
-  onLoginPress = () => {
-    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-        .then(() => { }, (error) => { Alert.alert(error.message); });
+  onResetPasswordPress = () => {
+    firebase.auth().sendPasswordResetEmail(this.state.email)
+        .then(() => {
+            Alert.alert("Password reset email has been sent.");
+        }, (error) => {
+            Alert.alert(error.message);
+        });
 }
 
   render() {
@@ -30,7 +32,7 @@ state = {
         <View style={styles.container2}> 
         <Form style={styles.form}>
             <Item floatingLabel>
-              <Label>Username or Email</Label>
+              <Label>Email</Label>
               <Input 
               underlineColorAndroid='transparent'
               autoCapitalize="none" 
@@ -38,32 +40,19 @@ state = {
               value={this.state.email}
               />
               </Item>
-            <Item secureTextEntry floatingLabel last>
-              <Label>Password</Label>
-              <Input 
-              secureTextEntry={true} 
-              underlineColorAndroid='transparent' 
-              autoCapitalize="none"
-              onChangeText={password => this.setState({ password })}
-              value={this.state.password}
-              />
-            </Item>
-            <TouchableOpacity 
-            onPress={() => this.props.navigation.navigate('ForgotPassword')}
-            >
-              <Text style={styles.forgotText}>Forgot Password</Text>
-            </TouchableOpacity> 
+
           </Form>
           <TouchableOpacity 
-          style={styles.button}        
-          onPress={this.onLoginPress}
+          style={styles.button}
+         
+          onPress={this.onResetPasswordPress}
           >
-            <Text style={styles.buttonText}>LOGIN</Text>
+            <Text style={styles.buttonText}>Reset Password</Text>
           </TouchableOpacity>
           <TouchableOpacity 
-          onPress={() => this.props.navigation.navigate('SignupForm')}
+          onPress={() => this.props.navigation.navigate('LoginForm')}
           >
-            <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
+            <Text style={styles.signupText}>Back to Login</Text>
           </TouchableOpacity> 
           </View>
       </KeyboardAvoidingView>
@@ -125,11 +114,6 @@ const styles = StyleSheet.create({
   },
   signupText:{
     color: 'red',
-    textAlign: 'left',
-    marginTop: 10,
-  },
-  forgotText:{
-    color: 'blue',
     textAlign: 'left',
     marginTop: 10,
   }

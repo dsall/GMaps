@@ -5,7 +5,10 @@ import {KeyboardAvoidingView, StyleSheet, Text, View, Image } from 'react-native
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
 import Welcome from '../WelcomeScreen/welcome';
-import MainPage from '../MainPage/mainpage'
+import Loading from './loading';
+import ForgotPassword from './ForgotPassword';
+
+
 
 import { createSwitchNavigator } from 'react-navigation';
 
@@ -13,12 +16,13 @@ const gmapslogo = require("../../Images/gmapslogo.png");
 
 
 
-const Navigation = createSwitchNavigator(
+const LoginFlow = createSwitchNavigator(
   {
     Welcome,
     SignupForm,
     LoginForm,
-    MainPage,
+    Loading,
+    ForgotPassword,
   },
   {
     initialRouteName: 'Welcome'
@@ -26,4 +30,4 @@ const Navigation = createSwitchNavigator(
 )
 
 
-export default Navigation;
+export default LoginFlow;

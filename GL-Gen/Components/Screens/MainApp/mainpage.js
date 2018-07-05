@@ -1,19 +1,23 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Button } from 'react-native';
 import { MapView, Marker } from 'expo';
+import * as firebase from 'firebase';
+
 
 const my_array=[];
 export default class MainPage extends React.Component {
 constructor(props) {
         super(props);
         this.state = {
-            latitude1: null,
-            longitude1: null,
+            latitude1: 39.144339,
+            longitude1:  -84.568880,
             error1: null,
             my_array: [],
         };
     }
-
+onSignoutPress = () => {
+    firebase.auth().signOut();
+    }
 componentDidMount() {
     navigator.geolocation.getCurrentPosition(
     (position) => {
@@ -42,18 +46,14 @@ componentDidMount() {
             }}
             mapType = "hybrid"
             >
-
-            
-
             </MapView>
             <TouchableOpacity style = {{
                     position: 'absolute',
                     bottom: 0,
                     borderColor: 'transparent',
-                    alignItems: 'center',
-                    
+                    alignItems: 'center',          
             }}     
-            onPress={this.Store_Data}
+            onPress={() => this.props.navigation.navigate('BarcodeRead')}
             >
             <Text style={{
                 bottom:0,
@@ -62,8 +62,11 @@ componentDidMount() {
              style = {{ width: 75, height: 75, borderRadius: 75,bottom:0 }}
             
             />
-
             </TouchableOpacity>    
+            <Button 
+             title='signout' 
+             onPress={this.onSignoutPress}    
+            />
 
             </View>
                    
