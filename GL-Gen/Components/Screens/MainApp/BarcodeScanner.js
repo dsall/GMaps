@@ -20,7 +20,9 @@ export default class BarcodeRead extends Component {
   };
 
 
-
+  _handleBarCodeRead = ({ type, data }) => {
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  }
   render() {
     return (
         
@@ -31,7 +33,7 @@ export default class BarcodeRead extends Component {
           this.state.hasCameraPermission === false ?
             <Text>Camera permission is not granted</Text> :
             <BarCodeScanner
-              onBarCodeRead={data_barecode => this.setState({ data_barecode })}
+              onBarCodeRead={this._handleBarCodeRead} //data_barecode => this.setState({ data_barecode })
               style={{ height: 150, width: 420, top: 40,  }}
             />
         }
@@ -39,9 +41,15 @@ export default class BarcodeRead extends Component {
        <View style={styles.cont}>
         <TouchableOpacity
         style={styles.scanbutton}
-        onPress={() => console.log(this.state.data_barecode)}
+        onPress={() => this._handleBarCodeRead}
         >
         <Text style={{alignItems: 'center',textAlign: 'center',}}>Scan the Barrecode</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+        style={styles.scanbutton}
+        onPress={() => this.props.navigation.navigate('MainPage')}
+        >
+        <Text style={{alignItems: 'center',textAlign: 'center',}}>Return Back</Text>
         </TouchableOpacity>
         </View>
         </View>
@@ -63,6 +71,7 @@ const styles = StyleSheet.create({
 
   },
   scanbutton:{
+      marginTop: 20,
       alignItems: 'center',
       width:420,
       height: 50,
