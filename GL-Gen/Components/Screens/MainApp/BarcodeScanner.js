@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import {TouchableOpacity, Text, View, StyleSheet, Alert } from 'react-native';
 import { Constants, BarCodeScanner, Permissions } from 'expo';
+import { coordinate } from './mainpage';
+
+import DataAnalysis from './GetDataAnalyze';
 
 export default class BarcodeRead extends Component {
   state = {
@@ -51,6 +54,7 @@ export default class BarcodeRead extends Component {
         >
         <Text style={{alignItems: 'center',textAlign: 'center',}}>Return Back</Text>
         </TouchableOpacity>
+        <DataAnalysis />
         </View>
         </View>
       

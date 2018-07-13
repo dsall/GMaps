@@ -6,7 +6,7 @@ import { Constants, Location, Permissions } from 'expo';
 const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 
 
-export default class App extends Component {
+export default class Map extends Component {
     state = {
       location: { coords: {latitude: 0, longitude: 0}},
     };

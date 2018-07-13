@@ -29,7 +29,7 @@ export default class LocationGPS extends Component {
       });
     }
 
-    let location = await Location.getCurrentPositionAsync({});
+    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
     this.setState({ location });
   };
 
@@ -47,9 +47,9 @@ export default class LocationGPS extends Component {
       rlatitude = JSON.stringify(this.state.location.coords.latitude);
       rlongitude = JSON.stringify(this.state.location.coords.longitude);
       raccuracy = JSON.stringify(this.state.location.coords.accuracy);
-      pluscode = JSON.stringify(olc.encode(this.state.latitude, this.state.longitude));
-      
-      console.log(this.state.location.coords);
+      pluscode = (olc.encode(this.state.location.coords.latitude, this.state.location.coords.longitude));
+      shortcode = JSON.stringify(olc.shorten(pluscode, 47.5,8.5));
+  
     }
 
     return (
@@ -57,8 +57,8 @@ export default class LocationGPS extends Component {
         <Text style={styles.paragraph}>Latitude: {rlatitude}</Text>
         <Text style={styles.paragraph}>Longitude: {rlongitude}</Text>
         <Text style={styles.paragraph}>Accuracy: {raccuracy} m</Text>
-        <Text style={styles.paragraph}>Pluscode: {raccuracy} </Text>
-        <Text style={styles.paragraph}>Shortcode: {raccuracy} </Text>
+        <Text style={styles.paragraph}>Pluscode: {pluscode} </Text>
+        <Text style={styles.paragraph}>Shortcode: {shortcode} </Text>
       </View>
     );
   }

@@ -1,76 +1,79 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Button } from 'react-native';
-import { MapView, Marker } from 'expo';
+import Expo from 'expo';
+import { Constants, Location, Permissions } from 'expo';
 import * as firebase from 'firebase';
 
+const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 
-const my_array=[];
+export var coordinate = [];
+export var coorddrag = [];
+
+
+getData = () => {
+    return coordinate;
+}
+
 export default class MainPage extends React.Component {
-constructor(props) {
-        super(props);
-        this.state = {
-            latitude1: 39.144339,
-            longitude1:  -84.568880,
-            error1: null,
-            my_array: [],
-        };
-    }
+state = {
+        location: { coords: {latitude: 0, longitude: 0}},
+
+    };
+    
 onSignoutPress = () => {
     firebase.auth().signOut();
     }
-componentDidMount() {
-    navigator.geolocation.getCurrentPosition(
-    (position) => {
-        this.setState({
-            latitude1: position.coords.latitude,
-            longitude1: position.coords.longitude,
-            error: null,
-        }, function(){
-            my_array.push([this.state.longitude1,  this.state.latitude1]);
-        });
-    
-    },
-    (error) => this.setState({ error: error.message }), { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-    );
+componentWillMount() {
+    Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
     }
+    
+locationChanged = (location) => {
+    region = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta:  0.00002,
+        longitudeDelta: 0.00001,
+    },
+    this.setState({location, region});
+    coordinate.push(this.state.location.coords);
+}
 
     render() {
         return ( 
         < View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <MapView style = {styles.map}
-            initialRegion = {{
-                    latitude: this.state.latitude1,
-                    longitude: this.state.longitude1,
-                    latitudeDelta: 0.00002,
-                    longitudeDelta: 0.00001,
-            }}
-            mapType = "hybrid"
+            <Expo.MapView
+                style={ styles.map}
+                showsUserLocation={true}
+                region={this.state.region}
+                mapType = "hybrid"
             >
-            </MapView>
+            <Expo.MapView.Marker
+            draggable = {true}
+            onDragEnd={(e) => {coorddrag.push(e.nativeEvent.coordinate)}}
+            coordinate={this.state.location.coords}
+            image={require('./Images/house_2.png')} 
+            > 
+            </Expo.MapView.Marker>
+            </Expo.MapView>
             <TouchableOpacity style = {{
                     position: 'absolute',
                     bottom: 0,
                     borderColor: 'transparent',
                     alignItems: 'center',          
             }}     
-            onPress={() => this.props.navigation.navigate('BarcodeRead')}
+            onPress={() => {this.props.navigation.navigate('BarcodeRead'); console.log(coorddrag)}}
             >
             <Text style={{
                 bottom:0,
             }}> Press here to add this location </Text>
             <Image source = { require('../../Images/gmaps.jpg') }
              style = {{ width: 75, height: 75, borderRadius: 75,bottom:0 }}
-            
+             con
             />
             </TouchableOpacity>    
-            <Button 
-             title='signout' 
-             onPress={this.onSignoutPress}    
-            />
-
+            
             </View>
-                   
-                  
+                                    
     );}
     
 }
@@ -88,3 +91,5 @@ const styles = StyleSheet.create({
     },
 
 });
+
+
