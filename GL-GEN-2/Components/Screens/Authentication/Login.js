@@ -2,11 +2,17 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, Image, TextInput } from "react-native";
 
+
+
+import * as firebase from 'firebase';
+
 import PhoneInput from "react-native-phone-input";
 const gmapslogo = require("../../../Assets/Images/gmapslogo.png");
 
 
 export default class Login extends Component {
+
+
   constructor() {
     super();
 
@@ -15,40 +21,28 @@ export default class Login extends Component {
       type: "",
       value: ""
     };
-
-    this.updateInfo = this.updateInfo.bind(this);
-    this.renderInfo = this.renderInfo.bind(this);
   }
 
-  updateInfo() {
-    this.setState({
-      valid: this.phone.isValidNumber(),
-      type: this.phone.getNumberType(),
-      value: this.phone.getValue()
-    });
-  }
+verifypin = () => {
+console.log('verifie');
+}
 
-  renderInfo() {
-    if (this.state.value) {
-      return (
-        <View style={styles.info}>
-          <Text>
-            Is Valid:{" "}
-            <Text style={{ fontWeight: "bold" }}>
-              {this.state.valid.toString()}
-            </Text>
-          </Text>
-          <Text>
-            Type: <Text style={{ fontWeight: "bold" }}>{this.state.type}</Text>
-          </Text>
-          <Text>
-            Value:{" "}
-            <Text style={{ fontWeight: "bold" }}>{this.state.value}</Text>
-          </Text>
-        </View>
-      );
-    }
+onLoginPress = () => {
+  this.setState({
+    valid: this.phone.isValidNumber(),
+    type: this.phone.getNumberType(),
+    value: this.phone.getValue()
+  });
+
+  if (this.state.valid){
+    let phoneNumber  = this.state.value;
+    firebase.auth().signInWithPhoneNumber(phoneNumber)
+    .then(console.log('success'))
   }
+  else{
+    console.log('invalid'+this.state.valid);
+  }
+}
   render() {
     return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -61,18 +55,18 @@ export default class Login extends Component {
 
         <View style={styles.container2}> 
 
-            <PhoneInput
+            <PhoneInput 
             ref={ref => {
-                this.phone = ref;
+            this.phone = ref;
             }}
+            initialCountry='us'
             />
             <TouchableOpacity 
-            style={styles.button}        
-            onPress={console.log('pressed')}
+            style={styles.button}   
+            onPress={this.onLoginPress}     
             >
             <Text style={styles.buttonText} >LOGIN</Text>
             </TouchableOpacity>
-
         </View>
 
     </KeyboardAvoidingView>
