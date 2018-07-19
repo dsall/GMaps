@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Loading from './Components/Screens/Loading and Splash/Loading';
 import Welcome from './Components/Screens/Loading and Splash/Welcome';
-import Login from './Components/Screens/Authentication/Login';
-
+import LoginFlow from './Components/Screens/Authentication/LoginFlow';
+import AddingPage from './Components/Screens/AddingAddress/AddingPage';
+import AddFlow from './Components/Screens/AddingAddress/AddFlow';
 import * as firebase from 'firebase';
 
 var config = {
@@ -38,7 +38,7 @@ export default class App extends React.Component {
   render() {
       return (
         <View style={styles.container}>
-          {(this.state.isAuthenticated) ? <Welcome /> : <Login />}
+          {(this.state.isAuthenticated) ? <AddFlow /> : <LoginFlow/>}
         </View>
       );
     }

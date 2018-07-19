@@ -1,81 +1,79 @@
+import React from "react";
 
-import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, Image, TextInput } from "react-native";
-
-
-
+import {TouchableOpacity, KeyboardAvoidingView, StyleSheet, Text,  View, Image, Alert } from 'react-native';
+import {  Form, Item, Input, Label } from 'native-base';
 import * as firebase from 'firebase';
-
-import PhoneInput from "react-native-phone-input";
 const gmapslogo = require("../../../Assets/Images/gmapslogo.png");
 
 
-export default class Login extends Component {
-
-
-  constructor() {
-    super();
-
-    this.state = {
-      valid: "",
-      type: "",
-      value: ""
-    };
+export default class Login extends React.Component {
+  
+state = {
+    email: '',
+    password: '',
   }
 
-verifypin = () => {
-console.log('verifie');
+  onLoginPress = () => {
+    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then(() => { }, (error) => { Alert.alert(error.message); });
 }
 
-onLoginPress = () => {
-  this.setState({
-    valid: this.phone.isValidNumber(),
-    type: this.phone.getNumberType(),
-    value: this.phone.getValue()
-  });
-
-  if (this.state.valid){
-    let phoneNumber  = this.state.value;
-    firebase.auth().signInWithPhoneNumber(phoneNumber)
-    .then(console.log('success'))
-  }
-  else{
-    console.log('invalid'+this.state.valid);
-  }
-}
   render() {
     return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <View style={styles.logoContainer}>
             <Image 
             style={styles.logo}
             source={gmapslogo}
             />         
         </View>
-
         <View style={styles.container2}> 
-
-            <PhoneInput 
-            ref={ref => {
-            this.phone = ref;
-            }}
-            initialCountry='us'
-            />
+        <Form>
+           
+              <Item  floatingLabel last>
+              <Label>Email or Username</Label>
+              <Input 
+              underlineColorAndroid='transparent' 
+              autoCapitalize="none"
+              onChangeText={email=> this.setState({ email })}
+              value={this.state.email}
+              />
+            </Item>
+            <Item secureTextEntry floatingLabel last>
+              <Label>Password</Label>
+              <Input 
+              secureTextEntry={true}
+              underlineColorAndroid='transparent' 
+              autoCapitalize="none"
+              onChangeText={password => this.setState({ password })}
+              value={this.state.password}
+              />
+            </Item>
             <TouchableOpacity 
-            style={styles.button}   
-            onPress={this.onLoginPress}     
+            onPress={() => this.props.navigation.navigate('ForgotPassword')}
             >
-            <Text style={styles.buttonText} >LOGIN</Text>
-            </TouchableOpacity>
-        </View>
-
-    </KeyboardAvoidingView>
+              <Text style={styles.forgotText}>Forgot Password</Text>
+            </TouchableOpacity> 
+          </Form>
+          <TouchableOpacity 
+          style={styles.button}        
+          onPress={this.onLoginPress}
+          >
+            <Text style={styles.buttonText}>LOGIN</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('Signup')}
+          >
+            <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
+          </TouchableOpacity> 
+          </View>
+      </KeyboardAvoidingView>
     );
   }
 }
 
-let styles = StyleSheet.create({
-    container:{
+const styles = StyleSheet.create({
+  container:{
     flex:1,
     backgroundColor: 'white',
   },
@@ -95,12 +93,13 @@ let styles = StyleSheet.create({
   container2:{
     padding:20,
   },
+
   button:{
     backgroundColor: '#42A5F5',
     height: 40,
     borderRadius: 5,
-    marginTop: 20,
   },
+
   buttonText:{
     fontSize: 24,
     fontWeight: '300',
@@ -110,4 +109,16 @@ let styles = StyleSheet.create({
     textAlign: 'center'
     
   },
+  signupText:{
+    color: 'red',
+    textAlign: 'left',
+    marginTop: 10,
+  },
+  forgotText:{
+    color: 'blue',
+    textAlign: 'left',
+    marginTop: 10,
+    marginBottom: 10,
+  }
+
 });

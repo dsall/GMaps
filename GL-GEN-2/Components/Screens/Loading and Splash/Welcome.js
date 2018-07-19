@@ -2,11 +2,18 @@ import React from "react";
 import { Image } from "react-native";
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from "native-base";
+import * as firebase from 'firebase';
+
 
 const xms = require("../../../Assets/Images/xms.jpg");
 const gmaps = require("../../../Assets/Images/gmaps.jpg");
 
 export default class Welcome extends React.Component {
+
+  onSignoutPress = () => {
+    firebase.auth().signOut();
+    }
+
   render() {
 
     return (
@@ -24,7 +31,7 @@ export default class Welcome extends React.Component {
     </View>
     <View>
       <Button transparent light
-      
+      onPress={this.onSignoutPress}
       >
             <Text>Click Here To Start Using The App</Text>
       </Button>
