@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "sdkVersion": "27.0.0",
+    "name": "GL-GEN-2",
+    "slug": "gl-gen-2",
+    "version": "0.1.0",
+    "isDetached": true,
+    "detach": {
+      "androidExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/android-v2.5.3-sdk27.0.0-408c8d77-8d1f-4784-b7b4-93826250663a.tar.gz"
+    },
+    "scheme": "exp0dae680e52104572a628c317e3d85f86",
+    "android": {
+      "package": "www.gmaps.io",
+      "publishBundlePath": "android\\app\\src\\main\\assets\\shell-app.bundle",
+      "publishManifestPath": "android\\app\\src\\main\\assets\\shell-app-manifest.json"
+    }
+  }
+}
