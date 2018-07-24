@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "990871429132",
+    "firebase_url": "https://gl-gen-bf42f.firebaseio.com",
+    "project_id": "gl-gen-bf42f",
+    "storage_bucket": "gl-gen-bf42f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990871429132:android:24bea0ecc213c595",
+        "android_client_info": {
+          "package_name": "www.gmaps.io"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "990871429132-o98dlvqvk1mdd2dghqaibm1u3scq45a0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZQJQht8YzUvebqAYPerIheeVxHA8Mhnk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

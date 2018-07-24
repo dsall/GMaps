@@ -51,6 +51,7 @@ export default class MapAdd extends Component {
               style={ styles.map}
               showsUserLocation={true}
               region={this.state.region}
+              mapType = "hybrid"
             >
             <MapView.Marker
             draggable = {true}

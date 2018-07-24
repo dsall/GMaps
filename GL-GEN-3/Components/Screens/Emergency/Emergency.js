@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Button, Tile } from 'react-native-elements';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, } from 'react-native';
+import Communications from 'react-native-communications';
 
 
 const Favorite_Array = [
@@ -26,28 +27,26 @@ const Favorite_Array = [
 ];
 
 
-CreateTile = (props) => {
-	return props.data_array.map(function (items, i){
-		return(
 
-			<View key={i} style = {{ flex: 1,  justifyContent: 'space-between', alignItems: 'center', marginTop:30, borderWidth: 1, borderRadius: 15, borderColor: 'white' }}>
-	            <Tile imageSrc = {{uri: items.URI}}
-		            title = {items.name}
-		            contentContainerStyle = {{}}
-		            containerStyle={{}}
-		            imageContainerStyle={{}}
-		            height = {props.height}
-		            width = {props.width}  
-		            featured={true}
-	            /> 
-            </View> 
-			);
-	});
-}
+
 	
 
 
 export default class Emergency extends React.Component {
+
+    goPolice = () => {
+        console.log('Police');
+        Communications.text('5134490428', 'latitude: 13.64787484, longitude:36373839');
+        Communications.phonecall('5134490428', true);
+
+        
+    }
+    goFire = () => {
+        console.log('Fire');
+    }
+    goAmbulance = () => {
+        console.log('Ambulance');
+    }
     render() {
         return ( 
 
@@ -56,7 +55,43 @@ export default class Emergency extends React.Component {
         	<ScrollView>
             <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', }}>
  				
- 				<CreateTile data_array={Favorite_Array} width={360} height={200} />
+            <View style = {{ flex: 1,  justifyContent: 'center', alignItems: 'center', marginTop:30, borderWidth: 1, borderRadius: 15, borderColor: 'white' }}>
+	            <Tile imageSrc = {{uri: Favorite_Array[0].URI}}
+		            title = {Favorite_Array[0].name}
+		            contentContainerStyle = {{}}
+		            containerStyle={{}}
+		            imageContainerStyle={{}}
+		            height = {200}
+		            width = {360}  
+		            featured={true}
+                    onPress={this.goPolice}   
+	            /> 
+            </View>
+
+            <View style = {{ flex: 1,  justifyContent: 'center', alignItems: 'center', marginTop:30, borderWidth: 1, borderRadius: 15, borderColor: 'white' }}>
+                <Tile imageSrc = {{uri: Favorite_Array[1].URI}}
+		            title = {Favorite_Array[1].name}
+		            contentContainerStyle = {{}}
+		            containerStyle={{}}
+		            imageContainerStyle={{}}
+		            height = {200}
+		            width = {360}  
+		            featured={true}
+                    onPress={this.goFire}   
+	            /> 
+            </View>
+            <View style = {{ flex: 1,  justifyContent: 'center', alignItems: 'center', marginTop:30, borderWidth: 1, borderRadius: 15, borderColor: 'white' }}>
+                <Tile imageSrc = {{uri: Favorite_Array[2].URI}}
+		            title = {Favorite_Array[2].name}
+		            contentContainerStyle = {{}}
+		            containerStyle={{}}
+		            imageContainerStyle={{}}
+		            height = {200}
+		            width = {360}  
+		            featured={true}
+                    onPress={this.goAmbulance}   
+	            /> 
+            </View>
 
             </View>
             </ScrollView>
