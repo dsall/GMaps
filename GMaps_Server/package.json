@@ -1,0 +1,14 @@
+{
+  "name": "gmaps_server",
+  "version": "1.0.0",
+  "description": "Server for GMAPS app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Backend"
+  ],
+  "author": "Djibril Sall",
+  "license": "ISC"
+}
