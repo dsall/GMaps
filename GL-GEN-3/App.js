@@ -6,14 +6,8 @@ import MaterialBottomTabNavigator from './Components/Screens/MainApp/BottomBar';
 
 import * as firebase from 'firebase';
 
-var config = {
-  apiKey: "AIzaSyCEM183SVO1MiN9pvUnne7KiGHaEBhm93w",
-  authDomain: "gl-gen-bf42f.firebaseapp.com",
-  databaseURL: "https://gl-gen-bf42f.firebaseio.com",
-  projectId: "gl-gen-bf42f",
-  storageBucket: "gl-gen-bf42f.appspot.com",
-  messagingSenderId: "990871429132"
-};
+import ApiKeys from './constants/ApiKeys';
+
 
 
 export default class App extends React.Component {
@@ -26,7 +20,7 @@ export default class App extends React.Component {
     };
 
     // Initialize firebase...
-    if (!firebase.apps.length) { firebase.initializeApp(config); }
+    if (!firebase.apps.length) { firebase.initializeApp(ApiKeys.FirebaseConfig); }
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
   }
 

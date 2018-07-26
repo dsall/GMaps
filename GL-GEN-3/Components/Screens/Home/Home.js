@@ -147,7 +147,7 @@ export default class Home extends React.Component {
                     onPress={this.goEvents}   
 	            /> 
             </View>
-            <View style = {{ flex: 1,  justifyContent: 'center', alignItems: 'center', marginTop:30, borderWidth: 1, borderRadius: 15, borderColor: 'white' }}>
+            <View style = {{ flex: 1,  justifyContent: 'center', alignItems: 'center', marginTop:30, marginBottom:30, borderWidth: 1, borderRadius: 15, borderColor: 'white' }}>
                 <Tile imageSrc = {{uri: Favorite_Array[4].URI}}
 		            title = {Favorite_Array[4].name}
 		            contentContainerStyle = {{}}

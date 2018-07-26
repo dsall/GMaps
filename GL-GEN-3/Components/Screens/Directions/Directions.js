@@ -1,54 +1,75 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
-import {  Location, MapView } from 'expo';
-import {Header, Button, Icon, Left, Body, Title, Right} from 'native-base';
+import { View, Text, Dimensions, StyleSheet, Alert, Platform } from 'react-native';
+import { Constants, MapView } from 'expo';
 
 
-const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
+const GOOGLE_MAPS_APIKEY = 'AIzaSyCYvMpmVhFc0ydILEuXGJNYNGFnBoKPCL8';
 
 
-export default class MapAdd extends Component {
-    state = {
-        location: { coords: {latitude: 0, longitude: 0}},
-      };
-    
-      componentWillMount() {
-        Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
+export default class Directions extends Component {
+
+	constructor(props) {
+        super(props)
+        this.state = {
+          coords: []
+        }
       }
     
-      locationChanged = (location) => {
-        region = {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta:  0.0922,
-            longitudeDelta: 0.0421,
-        },
-        this.setState({location, region});
-    }
+      componentDidMount() {
+        // find your origin and destination point coordinates and pass it to our method.
+        // I am using Bursa,TR -> Istanbul,TR for this example
+        this.getDirections("40.1884979, 29.061018", "41.0082,28.9784")
+      }
     
-
+      async getDirections(startLoc, destinationLoc) {
+            try {
+                let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${ startLoc }&destination=${ destinationLoc }`)
+                let respJson = await resp.json();
+                let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+                let coords = points.map((point, index) => {
+                    return  {
+                        latitude : point[0],
+                        longitude : point[1]
+                    }
+                })
+                this.setState({coords: coords})
+                return coords
+            } catch(error) {
+                alert(error)
+                return error
+            }
+        }
+    
       render() {
         return (
-        < View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <MapView
-              style={ styles.map}
-              showsUserLocation={true}
-              region={this.state.region}
-            >
+          <View>
+            <MapView style={styles.map} initialRegion={{
+              latitude:41.0082, 
+              longitude:28.9784, 
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421
+            }}>
+    
+            <MapView.Polyline 
+                coordinates={this.state.coords}
+                strokeWidth={2}
+                strokeColor="red"/>
+    
             </MapView>
-
-        </View>
+          </View>
         );
       }
-}
-
-const styles = StyleSheet.create({
-    map: {
+    }
+    
+    const styles = StyleSheet.create({
+      map: {
         position: 'absolute',
-        top: 25,
-        bottom: 0,
+        top: 0,
         left: 0,
-        bottom: 0,
         right: 0,
-    },
-});
+        bottom: 0,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height
+      },
+    });
+    

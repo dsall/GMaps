@@ -19,6 +19,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@mapbox/polyline": "^1.0.0",
     "expo": "^27.0.1",
     "firebase": "^5.2.0",
     "native-base": "^2.7.1",
@@ -26,6 +27,8 @@
     "react-native": "~0.55.2",
     "react-native-communications": "^2.2.1",
     "react-native-elements": "^0.19.1",
+    "react-native-firebase": "^4.3.7",
+    "react-native-maps": "^0.21.0",
     "react-native-phone-input": "^0.2.1",
     "react-native-qrcode": "^0.2.6",
     "react-native-vector-icons": "^4.6.0",

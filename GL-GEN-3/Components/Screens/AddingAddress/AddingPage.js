@@ -1,26 +1,49 @@
 import React, { Component } from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 import PhoneInput from "react-native-phone-input";
-
+import * as firebase from 'firebase';
 import { Thumbnail, Form, Content, Card, CardItem, Body, Left , Item, Input, Label} from 'native-base';
 
 import GL_Code from './GetAndAnalyzeData';
 import {Code} from './GetAndAnalyzeData';
-
-
+console.ignoredYellowBox = ['Setting a timer'];
+data=[];
 
 export default class AddingPage extends Component {
   
 
   constructor() {
     super();
+    this.ref = firebase.firestore().collection('todos');
     this.state = {
-      valid: "",
-      type: "",
-      value: ""
+      FullName: "",
+
     };
+    
   }
 
+
+
+  submit = async () => {
+    if (this.phone.isValidNumber()){
+      let nameOwner = this.state.FullName;
+      let phoneNumber  = this.phone.getValue();
+      let phoneType = this.phone.getNumberType();
+      data.push({'myuid': {name: nameOwner, phone: phoneNumber, type: phoneType, address: Code()}});
+
+      await console.log(data);
+      this.ref.add({
+        title: 'ibou',
+        complete: false,
+      });
+
+    }
+    else{
+      console.log('invalid'+ this.state.valid);
+
+    }
+    
+    }
   render() {
     
     return (
@@ -60,17 +83,19 @@ export default class AddingPage extends Component {
                   <Input
                   underlineColorAndroid='transparent' 
                   autoCapitalize="none"
+                  onChangeText={(FullName) => this.setState({ FullName })}
                   />
                   </Item>
                   <Text style={styles.Glcode}>GL-CODE: {Code()} </Text>
                   <TouchableOpacity   
-                  style={styles.button}  
+                  style={styles.button} 
+                  onPress={this.submit} 
                   >
                   <Text style={styles.buttonText} >SUBMIT ADDRESS</Text>
                   </TouchableOpacity> 
                   <TouchableOpacity   
                   style={styles.button}  
-                  onPress={() => this.props.navigation.navigate('Home')}                  >
+                  onPress={() => this.props.navigation.navigate('Home')}>
                   <Text style={styles.buttonText} >Return Home</Text>
                   </TouchableOpacity> 
                   
