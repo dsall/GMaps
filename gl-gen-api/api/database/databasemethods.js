@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-
+const bcrypt = require("bcrypt");
 
 
 mongoose.connect(
@@ -10,11 +10,14 @@ mongoose.connect(
 
 
 const address = require("../models/AddAddress");
-const id = '5b5978fe37710219c038ba88';
-const id2 =  '5b5963c99037cf19a8d70b8a';
+const id = '5b5adb12efae0f03e0e9a439';
+const id2 =  '5b5adcd7efae0f03e0e9a43b';
 
-const getUser_Address = (id) => {
-    address.findById(id)
+const phone = "+15136958052" ;
+
+var hash = bcrypt.hashSync("+15136958052", 10);
+const getUser_Address = (phone) => {
+    address.find({phone: phone})
     .select('Home_Address private')
     .exec()
     .then(doc => {
@@ -32,5 +35,14 @@ const getUser_Address = (id) => {
     
 }
 
-getUser_Address(id);
-getUser_Address(id2);
+
+
+getUser_Address(phone);
+// getUser_Address(id2);
+
+console.log(hash);
+
+
+bcrypt.compare("+15136958052", "$2b$10$HC0L.0uXJoEag0va6V7kW.actq231RFCvfYPmHC/wdWKyk7/xOdla").then(function(res) {
+    console.log(true);
+});
