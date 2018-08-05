@@ -93,7 +93,8 @@ export default class Home extends React.Component {
     render() {
         return ( 
 
-        	// <FavoriteScreenData />
+            // <FavoriteScreenData />
+            
 
         	<ScrollView>
             <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', }}>

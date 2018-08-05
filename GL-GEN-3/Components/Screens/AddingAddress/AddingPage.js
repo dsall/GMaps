@@ -55,7 +55,7 @@ StoreData = () => {
       success: true,
     })
     console.log('Worked');
-    
+      
     // this.props.navigation.navigate('Home');
   })
   .catch((error) => {

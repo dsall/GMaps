@@ -1,5 +1,14 @@
 {
   "expo": {
-    "sdkVersion": "27.0.0"
+   "name": "Your App Name",
+   "version": "1.0.0",
+   "slug": "your-app-slug",
+   "sdkVersion": "27.0.0",
+   "ios": {
+     "bundleIdentifier": "com.yourcompany.yourappname"
+   },
+   "android": {
+     "package": "com.gmaps.senegal"
+   }
   }
 }

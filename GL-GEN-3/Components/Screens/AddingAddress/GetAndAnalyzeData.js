@@ -5,6 +5,8 @@ import QRCode from 'react-native-qrcode';
 
 
 var pluscode = require('../../algorithme/pluscodealgo').encode;
+var decode = require('../../algorithme/pluscodealgo').decode;
+
 
 var lastdata = coorddrag.length - 1;
 
@@ -13,6 +15,13 @@ var lastdata = coorddrag.length - 1;
 export const Code = () => {
     return pluscode(coorddrag[coorddrag.length - 1]['latitude'], coorddrag[coorddrag.length - 1]['longitude']);
 }
+
+
+export const decodeGLCode = (GLCODE) => {
+    var decoded = decode(GLCODE);
+    return ({'latitude': decoded.latitudeCenter, 'longitude': decoded.longitudeCenter});
+}
+
 const GL_Code = () => {
     return(
     <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>

@@ -1,25 +1,23 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, Image, TextInput } from "react-native";
 import CountryPicker from 'react-native-country-picker-modal';
-
+const datamethods = require ('../../../methods/storage');
 
 import PhoneInput from "react-native-phone-input";
-const gmapslogo = require("../../../Assets/Images/gmapslogo.png");
+const gmapslogo = require("../../../../Assets/Images/gmapslogo.png");
 
 const Link = 'https://6742d2a1.ngrok.io/phoneauth';
 
 
 
-export default class MyPlaces extends Component {
+
+export default class LoginScreen extends Component {
 
   constructor() {
     super();
     this.onPressFlag = this.onPressFlag.bind(this);
     this.selectCountry = this.selectCountry.bind(this);
     this.state = {
-
-      phoneinput: 'true',
-      enterpin: 'false',
       phonedata: {
       valid: '',
       type: '',
@@ -28,11 +26,6 @@ export default class MyPlaces extends Component {
       
     };
   }
-
-
-verifypin = () => {
-console.log('verifie');
-}
 
 
 componentDidMount() {
@@ -50,6 +43,9 @@ selectCountry(country) {
   this.setState({ cca2: country.cca2 });
 }
 
+
+
+
 sendPin = () => {
   fetch(Link, {
     method: 'POST',
@@ -63,29 +59,16 @@ sendPin = () => {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      this.setState({
-        phoneinput: 'false',
-        enterpin: 'true',
-        
-      })
-      
-      // this.props.navigation.navigate('Home');
+      console.log(responseJson);
+      StoreData( 'PhoneNumberData' ,this.state.phonedata);
+      this.props.navigation.navigate('PinScreen');
     })
     .catch((error) => {
       console.log('please try again');
     });
 }
 
-renderPin = () => {
-    return(
-      <View style={styles.logoContainer}>
-              <Image 
-              style={styles.logo}
-              source={gmapslogo}
-              />         
-          </View>
-    );
-}
+
 onLoginPress = () => {
   this.setState({
     phonedata:{

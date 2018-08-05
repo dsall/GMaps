@@ -24,7 +24,7 @@ var TimeStamp = (`${t.getHours()}:${t.getMinutes()} ${t.getDay()}/${t.getMonth()
 var uid = uidgen.generateSync();
 var message = {success: '', uid: ''};
 
-CreateToken = (phonenumber, uid, TimeStamp) => {
+CreateToken = async (phonenumber, uid, TimeStamp) => {
     const savenewuid = new LoginToken({
         _id: new mongoose.Types.ObjectId(),
         phone: phonenumber,
@@ -46,25 +46,28 @@ CreateToken = (phonenumber, uid, TimeStamp) => {
       }
 }
 
-VerifyToLogIn = (phonenumber, pin_received) => {
-    LoginPin.find({phone: phonenumber})
+VerifyToLogIn = async (phonenumber, pin_received) => {
+    try{
+     await (LoginPin.find({phone: phonenumber})
     .select('pin')
     .exec()
     .then(doc => {
-    if(doc[0].pin === pin_received){
-        
+    if(doc[0].pin === pin_received){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
         CreateToken(phonenumber, uid, TimeStamp);
         message = {success: true, uidtoken: uid};
         // console.log(message);
-      
     } 
     else{
         message = {success: false, uidtoken: ""};
-        // console.log(message);
-        // console.log('Wrong pin submitted');
+        //  console.log(message);
+        //  console.log('Wrong pin submitted');
     }  
-    }).catch(err => {console.log('error')})
+    }).catch(err => {console.log('error')}))
     return message;
     
+   } catch(err){
+       console.log(error);
+   }
+
 }
 

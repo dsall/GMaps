@@ -1,8 +1,9 @@
 import React from 'react';
-import { Card, Button, Tile } from 'react-native-elements';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, } from 'react-native';
+import {Tile } from 'react-native-elements';
+import {  View,  ScrollView, } from 'react-native';
 import Communications from 'react-native-communications';
-
+import {  Location } from 'expo';
+const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 
 const Favorite_Array = [
 
@@ -27,18 +28,25 @@ const Favorite_Array = [
 ];
 
 
-
-
-	
-
-
 export default class Emergency extends React.Component {
+    state = {
+        location: { coords: {latitude: 0, longitude: 0}},
+        errorMessage: null,
+        };
 
+    componentWillMount() { 
+        Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
+    }
+
+    locationChanged = (location) => {
+        this.setState({location});
+    }
+    
     goPolice = () => {
         console.log('Police');
-        Communications.text('5134490428', 'latitude: 13.64787484, longitude:36373839');
+        console.log(JSON.stringify(this.state.location))
+        Communications.textWithoutEncoding('5134490428', JSON.stringify(this.state.location));
         Communications.phonecall('5134490428', true);
-
         
     }
     goFire = () => {
