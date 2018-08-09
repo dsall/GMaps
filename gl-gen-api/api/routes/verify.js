@@ -5,6 +5,7 @@ const Verification = require('../sms/login');
 
 
 router.post("/", async (req, res, next) => {
+  
   try {
     const user =  await VerifyToLogIn(req.body.phone, req.body.pin)
     console.log(user);
@@ -12,7 +13,7 @@ router.post("/", async (req, res, next) => {
   } catch (e) {
     //this will eventually be handled by your error handling middleware
     next(e) 
-  }
+}
 });
 
 

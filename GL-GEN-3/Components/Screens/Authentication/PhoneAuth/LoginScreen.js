@@ -6,13 +6,11 @@ const datamethods = require ('../../../methods/storage');
 import PhoneInput from "react-native-phone-input";
 const gmapslogo = require("../../../../Assets/Images/gmapslogo.png");
 
-const Link = 'https://6742d2a1.ngrok.io/phoneauth';
-
+const Link = 'https://62ed937d.ngrok.io/phoneauth';
 
 
 
 export default class LoginScreen extends Component {
-
   constructor() {
     super();
     this.onPressFlag = this.onPressFlag.bind(this);
@@ -44,8 +42,6 @@ selectCountry(country) {
 }
 
 
-
-
 sendPin = () => {
   fetch(Link, {
     method: 'POST',
@@ -68,6 +64,17 @@ sendPin = () => {
     });
 }
 
+CheckValidity = () => {
+  if (this.state.phonedata.valid){
+    // console.log(this.state.phonedata.value);
+    this.sendPin();
+  }
+  else{
+    console.log('error');
+    
+  }
+}
+
 
 onLoginPress = () => {
   this.setState({
@@ -77,15 +84,7 @@ onLoginPress = () => {
     value: this.phone.getValue()
     }
   });
-
-  if (this.state.phonedata.valid){
-    // console.log(this.state.phonedata.value);
-    this.sendPin();
-  }
-  else{
-    console.log('error');
-    
-  }
+  setTimeout(this.CheckValidity, 1000);
 }
   render() {
       return (

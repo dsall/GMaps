@@ -11,26 +11,24 @@ import Settings from '../Settings/Settings';
 import HomeFlow from '../Home/HomeFlow';
 import PhoneAuthFlow from '../Authentication/PhoneAuth/PhoneAuthFlow';
 
-
 import { createStackNavigator } from 'react-navigation';
 
 
 const FeedStack = createStackNavigator(
     {
       HomeFlow,
-      PhoneAuthFlow,
+      MyPlaces,
       Emergency,
       Directions,
       Settings,
+      PhoneAuthFlow,
     },
 
-  )
-
+)
 
 export default createMaterialBottomTabNavigator({
 Home: {
     screen: HomeFlow,
-    
     navigationOptions: {
     tabBarVisible: false,
     tabBarLabel: 'Home',
@@ -39,6 +37,7 @@ Home: {
 
     }
 },
+
 Direction: {
     screen: Directions,
     navigationOptions: {
@@ -53,7 +52,7 @@ Direction: {
     },
 
 Address: {
-    screen: PhoneAuthFlow,
+    screen: MyPlaces,
     navigationOptions: {
         tabBarLabel: 'My Places',
         tabBarIcon: ( <Icon name='place' color = '#42A5F5'
@@ -69,6 +68,7 @@ Emergency: {
           size = {24} />)
           }
       },
+
 Settings: {
     screen: Settings,
     navigationOptions: {
@@ -90,17 +90,6 @@ Settings: {
 
 )
 
-FeedStack.navigationOptions = ({navigation}) =>{
-    let tabBarVisible = true;
-    if (navigation.state.index > 0) {
-      tabBarVisible = false;
-    }
-  
-    return {
-      tabBarVisible,
-    };
-  };
-  
   
 
 const styles = StyleSheet.create({

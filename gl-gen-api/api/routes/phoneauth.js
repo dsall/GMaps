@@ -9,9 +9,7 @@ router.post("/", (req, res, next) => {
   res.status(201).json({
       success: true,
       message: "PIN sent to your phone number"
-  }).catch(err => {
-    console.log(error);
-  })
+  });
 });
 
 

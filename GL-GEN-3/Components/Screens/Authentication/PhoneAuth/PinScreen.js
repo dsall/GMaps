@@ -1,33 +1,25 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, Image, TextInput } from "react-native";
-import { AsyncStorage } from "react-native";
 import {  Form, Item, Input, Label } from 'native-base';
 const gmapslogo = require("../../../../Assets/Images/gmapslogo.png");
+import { withNavigation } from 'react-navigation';
+import { AsyncStorage } from "react-native";
 const datamethods = require ('../../../methods/storage');
+import CodeInput from 'react-native-confirmation-code-input';
 
-const Link = 'https://6742d2a1.ngrok.io/verify';
+const Link = 'https://62ed937d.ngrok.io/verify';
 
-
-export default class PinScreen extends Component {
+class PinScreen extends Component {
 
 constructor() {
     super();
     this.state = {
         phone: '+15134490428',
         pin: '',
-        data: {}
-    
     };
 
     }
 
-getData = async (data) => {
-    var resultat = await GetData(data);
-    
-    this.setState({
-        dat: resultat
-    })
-}
 
 SendPin = () => {
     fetch(Link, {
@@ -42,19 +34,30 @@ SendPin = () => {
         }),
         })
         .then((response) => response.json())
-        .then((responseJson) => {
-          console.log(responseJson);
-          this.props.navigation.navigate('Home');
+        .then((data) => {
+          if(data.success){
+              StoreData('uid', (JSON.stringify(data.uidtoken)));
+              this.props.navigation.navigate('MaterialBottomTabNavigator');
+          }
+          else{
+              alert('wrong pin submitted');
+          }
+
         })
         .catch((error) => {
           console.log('please try again');
         });
 }
-submitPin = () => {
-    this.SendPin();
-    console.log('submit pin');
+
+SeeDataStored = async () => {
+    const uid = await GetData('uid');
+    console.log(uid);
 
 }
+
+
+
+
   render() {
       return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -66,7 +69,6 @@ submitPin = () => {
           </View>
           <View style={styles.container2}> 
                 <Form>
-                <Text>{JSON.stringify(this.state.data)}</Text>
                 <Text>Please confirm the PIN you recived by sms in order to login</Text>
                 <Item  floatingLabel last>
                 <Label>Enter PIN</Label>
@@ -81,15 +83,16 @@ submitPin = () => {
             </Form>
             <TouchableOpacity 
             style={styles.button} 
-            onPress={() => this.getData('PhoneNumberData')}      
+            onPress={this.SendPin}      
             >
                 <Text style={styles.buttonText}>Submit Pin</Text>
             </TouchableOpacity>
+               
             <TouchableOpacity 
             style={styles.button} 
-            onPress={() => console.log(this.state.data)}      
+            onPress={this.SeeDataStored}      
             >
-                <Text style={styles.buttonText}>Show Result</Text>
+                <Text style={styles.buttonText}>See Stored Data</Text>
             </TouchableOpacity>
           </View>
 
@@ -98,6 +101,8 @@ submitPin = () => {
     
   }
 }
+
+export default withNavigation(PinScreen);
 
 let styles = StyleSheet.create({
     container:{

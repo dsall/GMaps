@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Image} from 'react-native';
 import { Container, Header, Content, List, ListItem, Left, Right, Button} from 'native-base';
-import * as firebase from 'firebase';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+const datamethods = require ('../../methods/storage');
 
 
 
@@ -37,9 +36,16 @@ export default class Settings extends Component {
         })
        }
       }
-onSignoutPress = () => {
-    firebase.auth().signOut();
-    }
+      SignOut =  async () => {
+        try{
+        await StoreData('uid', 'false');
+        this.props.navigation.navigate('PhoneAuthFlow');
+        }
+        catch(err){
+            console.log(err);
+        }
+
+      }
     render(){
         return(
 
@@ -76,7 +82,7 @@ onSignoutPress = () => {
             </View>
             <View style={{flex:1, justifyContent: 'flex-end',}}>
 
-                <TouchableOpacity style={styles.button}  onPress={this.onSignoutPress}>
+                <TouchableOpacity style={styles.button}  onPress={this.SignOut}>
                     <Text style={styles.buttonText}>Sign Out</Text>
                 </TouchableOpacity>
             </View>

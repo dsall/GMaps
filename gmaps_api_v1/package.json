@@ -1,0 +1,23 @@
+{
+  "name": "gmaps_api_v1",
+  "version": "1.0.0",
+  "description": "Backend for gmaps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.0",
+    "express": "^4.16.3",
+    "mongoose": "^5.2.7",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.18.3",
+    "npm": "^6.3.0",
+    "otp-generator": "^1.1.0",
+    "twilio": "^3.19.0",
+    "uid-generator": "^1.0.0",
+    "uuid": "^3.3.2"
+  }
+}

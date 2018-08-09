@@ -8,8 +8,6 @@ const Link = 'https://6742d2a1.ngrok.io/phoneauth';
 
 export default class Home extends Component {
 
-
-
   render() {
       return (
           <View style={styles.logoContainer}>

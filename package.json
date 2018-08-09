@@ -1,5 +1,5 @@
 {
-  "name": "gmaps_api",
+  "name": "gmaps_api_v1",
   "version": "1.0.0",
   "description": "Server for gmaps",
   "main": "n",
@@ -13,10 +13,16 @@
     "type": "git",
     "url": "git+https://github.com/dsall/GMaps.git"
   },
-  "author": "",
+  "author": "Djibril Sall",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/dsall/GMaps/issues"
   },
-  "homepage": "https://github.com/dsall/GMaps#readme"
+  "homepage": "https://github.com/dsall/GMaps#readme",
+  "keywords": [
+    "The",
+    "backend",
+    "for",
+    "gmaps"
+  ]
 }
