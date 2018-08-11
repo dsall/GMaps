@@ -50,13 +50,13 @@ export default  AddressView = (props) => {
             onPress={() => carPressed()} />
             <Icon
             raised
-            name='security'
+            name='directions-bus'
             color='#42A5F5'
             />
             <Icon
             raised
-            name='directions-bus'
-            color='#42A5F5'
+            name='save'
+            color='green'
             onPress={() => console.log('bus')} />
             <Icon
             raised

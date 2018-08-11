@@ -37,9 +37,9 @@ render() {
                 <View style={{flex:3, justifyContent:'flex-end' }}>
                 <AddressView data = {this.state.datascanned} />
                 </View>
-                <View style={{flex:1, justifyContent:'flex-start'}}>
+                <View style={{flex:1, justifyContent:'flex-start', alignItems: 'center'}}>
                 <Icon 
-                    containerStyle={{position: 'absolute', bottom: 0, right: 0}}
+                    containerStyle={{}}
                     reverse
                     size = {30}
                     name='cancel'

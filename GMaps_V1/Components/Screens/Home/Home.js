@@ -284,7 +284,7 @@ GetMyAddress = async () => {
                 name='map'
                 size={28}
                 color='#42A5F5'
-                onPress={() => this.GetAddress()} 
+                onPress={() => this.props.navigation.navigate('GetAddress')} 
                 />
                 </TouchableOpacity>
                 </View>

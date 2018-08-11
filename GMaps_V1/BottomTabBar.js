@@ -11,7 +11,10 @@ import PhoneInputScreen from './Components/Screens/LogIn/PhoneInputScreen';
 import PinInputScreen from './Components/Screens/LogIn/PinInputScreen';
 
 import HomeScreen from './Components/Screens/Home/Home';
+
 import ScanScreen from './Components/Screens/Home/ScanAndGo';
+
+import GetAnAddressScreen from './Components/Screens/Home/GetAnAddress';
 
 import MyPlacesScreen from './Components/Screens/MyPlaces/MyPlacesScreen';
 
@@ -99,6 +102,7 @@ export const MenuStack = createSwitchNavigator({
     LogIn:{screen: LogInStack},
     Adding: {screen: AddingStack},
     Scan: {screen: ScanScreen},
+    GetAddress: {screen: GetAnAddressScreen},
 });
 
 
