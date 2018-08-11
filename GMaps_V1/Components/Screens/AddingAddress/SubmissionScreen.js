@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Dimensions} from 'react-native';
 import PhoneInput from "react-native-phone-input";
-import { ListItem, Right, Button, Icon, Switch , Thumbnail, Form, Content, Card, CardItem, Body, Left , Item, Input, Label} from 'native-base';
-
+import { ListItem, Right, Button, Switch , Thumbnail, Form, Content, Card, CardItem, Body, Left , Item, Input, Label} from 'native-base';
+import {Icon } from 'react-native-elements';
 import GL_Code from './DataAnalysis';
 import {Code} from './DataAnalysis';
 const API = require('../../Methods/Api/http');
@@ -10,9 +10,13 @@ const API = require('../../Methods/Api/http');
 console.ignoredYellowBox = ['Setting a timer'];
 data=[];
 
+let width = Dimensions.get('window').width;
+let height = Dimensions.get('window').height;
 
 export default class AddingPage extends Component {
-  
+static navigationOptions = {
+  header: null,
+  };
 
   constructor() {
     super();
@@ -107,9 +111,9 @@ privatePress = () =>{
      <KeyboardAvoidingView behavior="padding" style={{flex:1}} >
       <View style={{flex: 1, backgroundColor: '#42A5F5'}}>
       </View>
-      <View style={{flex:6, justifyContent: 'flex-end', marginHorizontal: 20, marginVertical: 20,}}>
+      <View style={{flex:10, justifyContent: 'flex-end', marginHorizontal: 20, marginVertical: 20,}}>
         <Content>
-          <Card>
+          <Card style={{width: 0.90*width,}}>
             <CardItem header>
               <Left>
                   <Thumbnail source={require('../../../Assets/Images/gmapslogo.png')} />
@@ -129,7 +133,7 @@ privatePress = () =>{
         <View style={{marginTop: 40,}}>
                 <Form>
                   <Text style={styles.directions}>Enter your name and choose if you want to make your address public. </Text>
-                  <Text style={{justifyContent: 'center', textAlign: 'center', fontSize: 40}}>{(this.state.phone)}</Text>
+                  <Text style={{justifyContent: 'center', textAlign: 'center', fontSize: 30}}>{(this.state.phone)}</Text>
                   <Item  floatingLabel last>
                   <Label>Enter Your First Name</Label>
                   <Input
@@ -147,9 +151,10 @@ privatePress = () =>{
                   />
                   </Item>
                   <Text style={styles.Glcode}>GL-CODE: {Code()} </Text>
-
+                  <View style={{justifyContent:'center', flexDirection:'column', alignItems: 'center'}}>
                   <TouchableOpacity   
                   style={{height: 40,
+                          width: 0.50*width,
                           borderRadius: 5,
                           marginTop: 20,
                           backgroundColor: this.state.swcolor,
@@ -164,16 +169,23 @@ privatePress = () =>{
                   >
                   <Text style={styles.buttonText} >SUBMIT ADDRESS</Text>
                   </TouchableOpacity> 
-                  <TouchableOpacity   
-                  style={styles.button}  
-                  onPress={() => this.props.navigation.navigate('Home')}>
-                  <Text style={styles.buttonText} >Return Home</Text>
-                  </TouchableOpacity> 
+                  </View>
                 </Form> 
+                
         </View>                   
         </Content>
         </View>
+        <Icon 
+        containerStyle={{position: 'absolute', bottom: 0, right: 0}}
+        reverse
+        size = {30}
+        name='cancel'
+        color='red'
+        onPress={() => this.props.navigation.navigate('Home')} 
+        />
+
     </KeyboardAvoidingView>
+    
     );
     
   }
@@ -183,6 +195,7 @@ const styles = StyleSheet.create({
   button:{
     backgroundColor: '#42A5F5',
     height: 40,
+    width: 0.50*width,
     borderRadius: 5,
     marginTop: 20,
   },

@@ -30,6 +30,7 @@
     "react-native-elements": "^0.19.1",
     "react-native-phone-input": "^0.2.1",
     "react-native-qrcode": "^0.2.7",
+    "react-native-swiper": "^1.5.13",
     "react-native-vector-icons": "^5.0.0",
     "react-navigation": "^2.11.2",
     "react-navigation-material-bottom-tabs": "^0.3.0"

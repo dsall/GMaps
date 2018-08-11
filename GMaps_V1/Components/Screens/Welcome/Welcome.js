@@ -3,8 +3,12 @@ import { Image } from "react-native";
 import {Text, View } from 'react-native';
 import { Button } from "native-base";
 
+
+
 const xms = require("../../../Assets/Images/xms.jpg");
 const gmaps = require("../../../Assets/Images/gmaps.jpg");
+
+
 
 export default class WelcomeScreen extends React.Component {
 

@@ -11,6 +11,7 @@ import PhoneInputScreen from './Components/Screens/LogIn/PhoneInputScreen';
 import PinInputScreen from './Components/Screens/LogIn/PinInputScreen';
 
 import HomeScreen from './Components/Screens/Home/Home';
+import ScanScreen from './Components/Screens/Home/ScanAndGo';
 
 import MyPlacesScreen from './Components/Screens/MyPlaces/MyPlacesScreen';
 
@@ -35,7 +36,9 @@ const AddingStack = createStackNavigator (
         MapScreen: {screen: MapScreen},
         SubmitAddress: {screen: SubmissionScreen },
     }
+    
 )
+
 export const BottomTab = createMaterialBottomTabNavigator({
     Home: { screen: HomeScreen,
         navigationOptions: {
@@ -95,6 +98,7 @@ export const MenuStack = createSwitchNavigator({
     MainApp: {screen: BottomTab},
     LogIn:{screen: LogInStack},
     Adding: {screen: AddingStack},
+    Scan: {screen: ScanScreen},
 });
 
 

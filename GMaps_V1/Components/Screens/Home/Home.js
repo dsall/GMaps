@@ -1,8 +1,12 @@
-import React from 'react';
 import {  Tile } from 'react-native-elements';
-import { Text, StyleSheet, View,ScrollView, TouchableOpacity, Image, Dimensions, Share } from 'react-native';
+import { Platform, Linking, Text, StyleSheet, View,ScrollView, TouchableOpacity, Image, Dimensions, Share } from 'react-native';
 import QRCode from 'react-native-qrcode';
-import { Card, ListItem, Button, SocialIcon, Icon } from 'react-native-elements'
+import { Card, ListItem, Icon } from 'react-native-elements';
+import React from 'react';
+
+
+
+const decode = require('../../Methods/GLCode/pluscodealgo').decode;
 const Storage = require('../../Methods/Storage/storage');
 
 
@@ -40,6 +44,13 @@ const Favorite_Array = [
     },
 
 ];
+
+
+
+const decodeGLCode = (GLCODE) => {
+    var decoded = decode(GLCODE);
+    return ({'latitude': decoded.latitudeCenter, 'longitude': decoded.longitudeCenter});
+}
 
 
 
@@ -83,6 +94,7 @@ ShareAddress = () => {
 
 
 const AddressView = (props) => {
+    var text = JSON.stringify(props.data);
     return(
         <View>
         <Card containerStyle={{borderRadius: 5}}>
@@ -107,7 +119,7 @@ const AddressView = (props) => {
           </View>
           <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
           <QRCode
-                value= {props.data.Address}
+                value= {`${text}`}
                 size={125}
                 bgColor='black'
                 fgColor='white'
@@ -121,12 +133,12 @@ const AddressView = (props) => {
             raised
             name='directions-car'
             color='#42A5F5'
-            onPress={() => console.log('car')} />
+            onPress={() => carPressed()} />
             <Icon
             raised
             name='security'
             color='#42A5F5'
-            onPress={() => console.log('car')} />
+            />
             <Icon
             raised
             name='directions-bus'
@@ -136,7 +148,7 @@ const AddressView = (props) => {
             raised
             name='share'
             color='#42A5F5'
-            onPress={() => ShareAddress()} />
+            />
         </View>
     
         </Card>
@@ -145,6 +157,7 @@ const AddressView = (props) => {
     
       );
 }
+
 
 MyAddress = (props) => {
     return(
@@ -165,6 +178,16 @@ MyAddress = (props) => {
 }
 var MonAddresse = {};
 
+carPressed = () =>{
+
+    if (Platform.OS === 'ios') {
+        Linking.openURL(`http://maps.google.com/maps?q=37.78825,-122.4324`);
+      } else {
+        Linking.openURL(`https://www.google.com/maps/dir/39.143749,-84.569849/@37.78825,-122.4324/`);
+      }
+    };
+
+
 
 export default class HomeScreen extends React.Component {
 
@@ -177,6 +200,7 @@ constructor() {
             Address: '',
             Phone: '',
             Private: '',
+            geocode: '',
         },
         showInfo: 'false'
     };
@@ -184,11 +208,19 @@ constructor() {
     }
 GetMyAddress = async () => {
     var MyAddress = await GetData('MyAddress');
-    this.setState({my_address: {Name: MyAddress.first_name + MyAddress.last_name,
-                    Address: MyAddress.Home_Address,
-                    Phone: MyAddress.phone,
-                    Private: MyAddress.private,
-                    }});
+    if(MyAddress){
+        this.setState({my_address: {Name: MyAddress.first_name + MyAddress.last_name,
+            Address: MyAddress.Home_Address,
+            geocode: (decodeGLCode(`${MyAddress.Home_Address.substring(0,8)}+${MyAddress.Home_Address.substring(8,10)}`)),
+
+            Phone: MyAddress.phone,
+            Private: MyAddress.private,
+            }});
+    }
+    else{
+        console.log('empty'); 
+    }
+
     return MyAddress;
 }
 
@@ -224,6 +256,10 @@ GetMyAddress = async () => {
       this.refs.scrollView.scrollTo({y:0, animated: true});
     }
   }
+
+  GetAddress = () =>{
+      console.log(this.state.my_address.geocode);
+  }
     render() {
         return ( 
 
@@ -234,9 +270,43 @@ GetMyAddress = async () => {
                     <CreateTile data={Favorite_Array[3]} function = {this.goEvents} />
                     <CreateTile data={Favorite_Array[4]} function = {this.goMapAdd} />
                 </View>
-
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent:'center'}}>
+                
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent:'center'}}>
+                <TouchableOpacity
+                onPress={() => this.GetAddress()}
+                >
+                <Text> Get an address </Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                <Icon 
+                raised
+                name='map'
+                size={28}
+                color='#42A5F5'
+                onPress={() => this.GetAddress()} 
+                />
+                </TouchableOpacity>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent:'center'}}> 
+                <Icon 
+                raised
+                size={28}
+                name='camera'
+                color='#42A5F5'
+                onPress={() => this.props.navigation.navigate('Scan')} 
+                />
+                <TouchableOpacity
+                onPress = {() => this.props.navigation.navigate('Scan')}
+                >
+                <Text> Scan a code </Text>
+                </TouchableOpacity>
+                </View>
+                
+                </View>
                 <MyAddress data={this.state.my_address} function = {this.ShowMyInfo} />
             </ScrollView>
+    
         );
     }
 }
@@ -256,6 +326,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       textAlign: 'center',
     },
+
 
   
   });

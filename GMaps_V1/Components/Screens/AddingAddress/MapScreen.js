@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {  Text, View, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import {  Location, MapView, Permissions } from 'expo';
-
+import { Icon } from 'react-native-elements';
 
 const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 
@@ -10,6 +10,9 @@ export var coorddrag = [];
 const gmaps = require("../../../Assets/Images/gmaps.jpg");
 
 export default class MapScreen extends Component {
+static navigationOptions = {
+header: null,
+};
 state = {
     location: { coords: {latitude: 0, longitude: 0}},
     errorMessage: null,
@@ -86,7 +89,16 @@ onAddPress = () => {
         <Image source ={gmaps}
             style = {{ width: 75, height: 75, borderRadius: 75,bottom:0 }}
         />
+
         </TouchableOpacity>  
+        <Icon 
+        containerStyle={{position: 'absolute', bottom: 0, right: 0}}
+        reverse
+        size = {30}
+        name='cancel'
+        color='red'
+        onPress={() => this.props.navigation.navigate('Home')} 
+        />
         
     </View>
     );
