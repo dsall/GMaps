@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const Link = 'https://e7779a7a.ngrok.io/';
+const Link = 'https://e97caadc.ngrok.io/';
 
 PostAPI = async (path, data) =>{
     try {
@@ -11,3 +11,5 @@ PostAPI = async (path, data) =>{
         console.log(err);
     }
 }
+
+

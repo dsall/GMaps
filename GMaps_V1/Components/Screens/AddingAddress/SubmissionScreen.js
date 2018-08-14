@@ -6,12 +6,22 @@ import {Icon } from 'react-native-elements';
 import GL_Code from './DataAnalysis';
 import {Code} from './DataAnalysis';
 const API = require('../../Methods/Api/http');
+import decode from '../../Methods/GLCode/pluscodealgo';
+
 
 console.ignoredYellowBox = ['Setting a timer'];
 data=[];
 
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
+
+
+const decodeGLCode = (GLCODE) => {
+  var decoded = decode(GLCODE);
+  return ({'latitude': decoded.latitudeCenter, 'longitude': decoded.longitudeCenter});
+}
+
+
 
 export default class AddingPage extends Component {
 static navigationOptions = {
@@ -26,12 +36,14 @@ static navigationOptions = {
       private: false,
       swcolor: "lightgray",
       prtext: "Public",
+      glcode: '',
       success: false,
       error: false,
       phone: '',
       saveddata: { first_name: "", last_name: "", Home_Address: "", phone: "", private: ""},
     };
     this.GetPhoneNumber();
+    this.GetRegion();
   }
 
 
@@ -39,6 +51,7 @@ static navigationOptions = {
 GetPhoneNumber = async () => {
     var PhoneNumber = await GetData('PhoneNumber');
     this.setState({phone: PhoneNumber});
+    this.setState({glcode: Code()});
 }
 SubmitGLCode = async () => {
     var data =  { 
@@ -54,6 +67,12 @@ SubmitGLCode = async () => {
       setTimeout( () => {alert('Your address have been stored in our database')}, 1000);
       this.props.navigation.navigate('Home');   
     }
+}
+
+
+GetRegion = async () => {
+  var Region = await PostAPI('getaddress/glcode', {GLCODE: "86FQ9CVP+QF"} );
+  console.log(Region);
 }
 
 

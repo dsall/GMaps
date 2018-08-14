@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const AddingRoute = require("./api/routes/AddAddress");
 const phoneauth = require("./api/routes/phoneauth");
 const verifyphone = require("./api/routes/verify");
+const getaddress = require("./api/routes/GetLocation");
 
 
 mongoose.connect(
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
 app.use("/AddAddress", AddingRoute);
 app.use("/phoneauth", phoneauth);
 app.use("/verify", verifyphone);
+app.use("/getaddress", getaddress);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");

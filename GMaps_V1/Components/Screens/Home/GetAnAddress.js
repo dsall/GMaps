@@ -1,15 +1,20 @@
 import React from 'react';
 import {  Text, View, StyleSheet, TouchableOpacity, Image, Alert, Dimensions } from 'react-native';
 import {  Location, MapView, Permissions } from 'expo';
-import { Icon } from 'react-native-elements';
+import QRCode from 'react-native-qrcode';
+import { Card, ListItem, Icon } from 'react-native-elements';
+import axios from 'axios';
 
-import AddressView from '../../Methods/Displays/CardView';
+var pluscode = require('../../Methods/GLCode/pluscodealgo').encode;
+var decode = require('../../Methods/GLCode/pluscodealgo').decode;
+const api = require('../../Methods/Api/http');
 
 const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 
-
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 const gmaps = require("../../../Assets/Images/gmaps.jpg");
+
 
 mapStyle = 
     [
@@ -258,6 +263,60 @@ mapStyle =
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
 
+
+
+
+AddressView = (props) =>{
+
+  return(
+      <View>
+      <Card containerStyle={{borderRadius: 5}}>
+        <View style={{flexDirection: 'row'}}>
+        <View style={{flex:1,}}>
+                          <ListItem 
+                          title={props.data.Address.substring(0,4)+'-'+props.data.Address.substring(4,7)+'+'+props.data.Address.substring(7,10)}
+                          leftIcon={{name: 'location-on', color : '#42A5F5'}}
+                          hideChevron={true}
+                          />
+                    
+                          <Text style={{textAlign:'auto', fontSize: 18, marginVertical: 20}}> {props.data.citycountry}</Text>
+
+        </View>
+        <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+        <QRCode
+              value= {props.data.Address}
+              size={125}
+              bgColor='black'
+              fgColor='white'
+              style={{marginTop:20}}
+        />
+        </View>
+        </View>
+  
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', }}>
+          <Icon
+          raised
+          name='directions-car'
+          color='#42A5F5'
+          onPress={() => carPressed()} />
+          <Icon
+          raised
+          name='save'
+          color='green'
+          onPress={() => console.log('bus')} />
+          <Icon
+          raised
+          name='share'
+          color='#42A5F5'
+          />
+      </View>
+  
+      </Card>
+      
+      </View>
+  );
+
+}
 export default class GetAnAddressScreen extends React.Component {
 
 
@@ -266,9 +325,12 @@ static navigationOptions = {
     header: null,
     };
     state = {
-        location: { coords: {latitude: 0, longitude: 0}},
+        location: { coords: {latitude: 0, longitude: 0, pluscode: ''}},
+        addresschanged: 'false',
+        city: '',
+        country: '',
         errorMessage: null,
-        data: {Name: 'Djibril Sall', Address: '865GYUG6GY', Phone: '+15134490428'},
+
         };
     
         componentWillMount() { 
@@ -293,7 +355,17 @@ static navigationOptions = {
             longitudeDelta: 0.0020,
         },
         this.setState({location, region});
+        this.setState({location: {coords:{pluscode: pluscode(this.state.location.coords.latitude, this.state.location.coords.longitude)}}});
+
+        this.GetRegion();
     }
+
+    GetRegion = async () => {
+      var Region = await FindCity(14.732783,  -17.461383 );
+      console.log(Region);
+      this.setState({city: Region.city, country: Region.country});
+    }
+
     
     onAddPress = () => {
         if(coorddrag.length > 0){
@@ -311,6 +383,9 @@ static navigationOptions = {
         }
     }
     render() {
+
+
+
     return (
     < View style = {{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <View style={{flex:1, justifyContent: 'center' , alignContent:'flex-end'}}> 
@@ -323,9 +398,15 @@ static navigationOptions = {
     </View>
     <View style={{flex:1, }}>
         <View style={{flex:3,   width: 0.95*width,  }}>
-        <AddressView  data = {this.state.data}/>
+        <Text>{this.state.location.coords.pluscode}</Text>
+      
+        
+        <AddressView data = {{Address: `${(this.state.location.coords.pluscode)}`, citycountry: this.state.city+','+this.state.country}}/>
+        
         </View>
         <View style={{flex:1, alignContent: 'center', alignItems: 'center'}}>
+
+
         <Icon 
         containerStyle={{position: 'absolute',}}
         reverse
@@ -334,6 +415,7 @@ static navigationOptions = {
         color='red'
         onPress={() => this.props.navigation.navigate('Home')} 
         />
+
         </View>
     </View>
         

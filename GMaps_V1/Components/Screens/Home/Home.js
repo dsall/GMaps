@@ -4,10 +4,16 @@ import QRCode from 'react-native-qrcode';
 import { Card, ListItem, Icon } from 'react-native-elements';
 import React from 'react';
 
+import {  Location, MapView, Permissions } from 'expo';
+import Flag from 'react-native-round-flags';
+
 
 
 const decode = require('../../Methods/GLCode/pluscodealgo').decode;
 const Storage = require('../../Methods/Storage/storage');
+const api = require('../../Methods/Api/http');
+
+const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 
 
 const Favorite_Array = [
@@ -45,7 +51,7 @@ const Favorite_Array = [
 
 ];
 
-
+var welcome ={};
 
 const decodeGLCode = (GLCODE) => {
     var decoded = decode(GLCODE);
@@ -202,10 +208,50 @@ constructor() {
             Private: '',
             geocode: '',
         },
-        showInfo: 'false'
+        showInfo: 'false',
+        place: '',
+        city: '',
+        showInfo: 'false',
+        location: {latitude: 0, longitude: 0, region: '', country: ''},
+        localitedone: false
     };
     this.GetMyAddress();
     }
+
+
+    componentWillMount() { 
+        this._getLocationAsync();
+    }
+    _getLocationAsync = async () => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+          this.setState({
+            errorMessage: 'Permission to access location was denied',
+          });
+        }
+    
+        Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
+      };
+    locationChanged = (location) => {
+    this.setState({
+        location: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+        }
+        
+    });
+    this.GetCity();
+}
+
+
+GetCity =  async () =>{
+            var Region = await PostAPI('getaddress', {latitude: 14.740107, longitude: -17.450741});
+            console.log(Region)
+            this.setState({place: Region.address, city: Region.city})
+            
+}
+
+    
 GetMyAddress = async () => {
     var MyAddress = await GetData('MyAddress');
     if(MyAddress){
@@ -228,23 +274,6 @@ GetMyAddress = async () => {
         this.props.navigation.navigate('MapScreen');
    } 
 
-   goExplore = () => {
-        console.log('Explore');
-   }
-
-   goRecent = () => {
-        console.log('Recents');
-   }
-
-   goFriends = () => {
-
-       console.log('Freinds');
-   }
-
-   goEvents = () => {
-       console.log('Events');
-       
-   }
 
 
    ShowMyInfo = () => {
@@ -257,16 +286,13 @@ GetMyAddress = async () => {
     }
   }
 
-  GetAddress = () =>{
-      console.log(this.state.my_address.geocode);
-  }
     render() {
         return ( 
 
         	<ScrollView ref="scrollView">
     
                 <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between',  }}>
-                    <CreateTile data={Favorite_Array[0]} function = {this.goRecent} />
+                    <CreateTile data={{name: this.state.place, URI: "http://layepro.com/wp-content/uploads/2014/05/Nature-Belle_10.jpg" }} function = {this.goEvents} />
                     <CreateTile data={Favorite_Array[3]} function = {this.goEvents} />
                     <CreateTile data={Favorite_Array[4]} function = {this.goMapAdd} />
                 </View>
@@ -274,7 +300,7 @@ GetMyAddress = async () => {
                 
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent:'center'}}>
                 <TouchableOpacity
-                onPress={() => this.GetAddress()}
+                onPress={() =>  this.props.navigation.navigate('GetAddress')}
                 >
                 <Text> Get an address </Text>
                 </TouchableOpacity>
