@@ -5,6 +5,7 @@ import PhoneInput from "react-native-phone-input";
 const gmapslogo = require("../../../Assets/Images/gmapslogo.png");
 const API = require('../../Methods/Api/http');
 const Storage = require ('../../Methods/Storage/storage');
+import {Input} from 'native-base';
 
 export default class PhoneInputScreen extends Component {
   constructor() {
@@ -86,6 +87,9 @@ onLoginPress = () => {
   
           <View style={styles.container2}> 
               <PhoneInput 
+              style ={{borderColor: '#42A5F5', height: 42.5, borderWidth: 0.03}}
+              flagStyle={{height:30, width: 50}}
+              textStyle={{fontSize:18}}
               ref={ref => {
               this.phone = ref;
               }}

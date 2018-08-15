@@ -551,7 +551,7 @@
         // Should we add a separator here?
         if (digitCount == SEPARATOR_POSITION_ && digitCount < codeLength) {
          /// Uncomment to add +    
-         //code += SEPARATOR_;
+         code += SEPARATOR_;
         }
       }
       if (code.length < SEPARATOR_POSITION_) {

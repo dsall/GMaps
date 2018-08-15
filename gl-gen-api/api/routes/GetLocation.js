@@ -16,20 +16,9 @@ FindCity =  async (latitude, longitude) =>{
     try {
         var response = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`);
             var address = response.data.address;
-            if(address.neighbourhood != undefined ){
-                var result = address.neighbourhood + ', '+address.suburb+ ', '+ address.city+ ', '+ address.state+ ', '+address.country;  
-            }
-            else if(address.suburb != undefined){
-                var result =address.suburb+ ', '+ address.city+ ', '+ address.state+ ', '+address.country;
-            }
-            else if (address.city != undefined){
-                var result = address.city+ ', '+ address.state+ ', '+address.country;
-            }
-            else {
-                var result = address.state+ ', '+address.country;
-            }
+            console.log(JSON.stringify(address));
             
-            return {address: result, city: address.state};
+            return {address: address, city: address.state};
         }
         catch(err){
             console.log(err);

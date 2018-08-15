@@ -1,9 +1,9 @@
 import React from 'react';
-import {  Text, View, StyleSheet, TouchableOpacity, Image, Alert, Dimensions } from 'react-native';
+import {  Text, View, StyleSheet, TouchableOpacity, Image, Alert, Dimensions , ScrollView} from 'react-native';
 import {  Location, MapView, Permissions } from 'expo';
 import QRCode from 'react-native-qrcode';
 import { Card, ListItem, Icon } from 'react-native-elements';
-import axios from 'axios';
+const API = require('../../Methods/Api/http');
 
 var pluscode = require('../../Methods/GLCode/pluscodealgo').encode;
 var decode = require('../../Methods/GLCode/pluscodealgo').decode;
@@ -274,12 +274,12 @@ AddressView = (props) =>{
         <View style={{flexDirection: 'row'}}>
         <View style={{flex:1,}}>
                           <ListItem 
-                          title={props.data.Address.substring(0,4)+'-'+props.data.Address.substring(4,7)+'+'+props.data.Address.substring(7,10)}
+                          title={props.data.Address.substring(0,4)+'-'+props.data.Address.substring(4,7)+'+'+props.data.Address.substring(7,8)+props.data.Address.substring(9,11)}
                           leftIcon={{name: 'location-on', color : '#42A5F5'}}
                           hideChevron={true}
                           />
                     
-                          <Text style={{textAlign:'auto', fontSize: 18, marginVertical: 20}}> {props.data.citycountry}</Text>
+                          <Text style={{textAlign:'center', fontSize: 14, marginVertical: 10}}> {props.data.citycountry}</Text>
 
         </View>
         <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
@@ -325,10 +325,11 @@ static navigationOptions = {
     header: null,
     };
     state = {
-        location: { coords: {latitude: 0, longitude: 0, pluscode: ''}},
+        location: { coords: {latitude: '', longitude: ''}},
+        glcode: '',
         addresschanged: 'false',
+        place: '',
         city: '',
-        country: '',
         errorMessage: null,
 
         };
@@ -354,34 +355,23 @@ static navigationOptions = {
             latitudeDelta: 0.0020,
             longitudeDelta: 0.0020,
         },
-        this.setState({location, region});
-        this.setState({location: {coords:{pluscode: pluscode(this.state.location.coords.latitude, this.state.location.coords.longitude)}}});
+        
+        setTimeout(this.setState({location, region}), 500);
+        setTimeout(this.setState({glcode : pluscode(this.state.location.coords.latitude, this.state.location.coords.longitude)}), 500);
+    
+        setTimeout(this.GetCity(), 500);
 
-        this.GetRegion();
+        
+        
     }
 
-    GetRegion = async () => {
-      var Region = await FindCity(14.732783,  -17.461383 );
-      console.log(Region);
-      this.setState({city: Region.city, country: Region.country});
-    }
+    GetCity =  async () =>{
+      var Region = await PostAPI('getaddress', {latitude: this.state.location.coords.latitude, longitude: this.state.location.coords.longitude});
+
+      this.setState({place: Region.address, city: Region.city}); 
+}
 
     
-    onAddPress = () => {
-        if(coorddrag.length > 0){
-            this.props.navigation.navigate('SubmitAddress');
-        }
-        else{
-            Alert.alert(
-                'Drag Icon to your house on map',
-                'Make sure you drag the icon to the correct house on the map, in order to make sure that we have a correct address for your house',
-                [
-                    {text: 'OK', onPress: () => console.log('OK Pressed')},
-                ],
-                { cancelable: false }
-                )
-        }
-    }
     render() {
 
 
@@ -398,10 +388,10 @@ static navigationOptions = {
     </View>
     <View style={{flex:1, }}>
         <View style={{flex:3,   width: 0.95*width,  }}>
-        <Text>{this.state.location.coords.pluscode}</Text>
+        <Text style={{textAlign: 'center', color: '#42A5F5', fontSize: 14}}>Please step outside for better accuracy</Text>
       
         
-        <AddressView data = {{Address: `${(this.state.location.coords.pluscode)}`, citycountry: this.state.city+','+this.state.country}}/>
+        <AddressView data = {{Address: `${(this.state.glcode)}`, citycountry: this.state.place}}/>
         
         </View>
         <View style={{flex:1, alignContent: 'center', alignItems: 'center'}}>

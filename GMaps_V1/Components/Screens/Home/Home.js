@@ -1,7 +1,7 @@
 import {  Tile } from 'react-native-elements';
 import { Platform, Linking, Text, StyleSheet, View,ScrollView, TouchableOpacity, Image, Dimensions, Share } from 'react-native';
 import QRCode from 'react-native-qrcode';
-import { Card, ListItem, Icon } from 'react-native-elements';
+import { Card, ListItem, Icon, Header } from 'react-native-elements';
 import React from 'react';
 
 import {  Location, MapView, Permissions } from 'expo';
@@ -66,13 +66,13 @@ let height = Dimensions.get('window').height;
 CreateTile = (props) => {
         return(
             <View>
-            <View  style = {{ flex: 1,  justifyContent: 'center', alignItems: 'center', marginTop:30, borderWidth: 1, borderRadius: 15, borderColor: 'white' }}>
+            <View  style = {{ flex: 1,  justifyContent: 'center', alignItems: 'center', marginTop:10, borderWidth: 1, borderRadius: 15, borderColor: 'white' }}>
                     <Tile imageSrc = {{uri: props.data.URI}}
                         title = {props.data.name}
                         contentContainerStyle = {{borderRadius: 10}}
                         containerStyle={{}}
                         imageContainerStyle={{borderRadius: 10}}
-                        height = {175}
+                        height = {0.2*height}
                         width = {0.8*width}  
                         featured={true}
                         onPress={props.function}
@@ -118,7 +118,7 @@ const AddressView = (props) => {
                             leftIconOnLongPress={() =>console.log('pressed')}
                             />
                             <ListItem 
-                            title={props.data.Address.substring(4,7)+'+'+props.data.Address.substring(7,10)}
+                            title={props.data.Address.substring(4,7)+'+'+props.data.Address.substring(7,8)+props.data.Address.substring(9,11)}
                             leftIcon={{name: 'home', color : '#42A5F5'}}
                             hideChevron={true}
                             />
@@ -245,10 +245,8 @@ constructor() {
 
 
 GetCity =  async () =>{
-            var Region = await PostAPI('getaddress', {latitude: 14.740107, longitude: -17.450741});
-            console.log(Region)
-            this.setState({place: Region.address, city: Region.city})
-            
+            var Region = await PostAPI('getaddress', {latitude: this.state.location.latitude, longitude: this.state.location.longitude});
+            this.setState({place: Region.address, city: Region.city}); 
 }
 
     
@@ -257,8 +255,7 @@ GetMyAddress = async () => {
     if(MyAddress){
         this.setState({my_address: {Name: MyAddress.first_name + MyAddress.last_name,
             Address: MyAddress.Home_Address,
-            geocode: (decodeGLCode(`${MyAddress.Home_Address.substring(0,8)}+${MyAddress.Home_Address.substring(8,10)}`)),
-
+            geocode: (decodeGLCode(`${MyAddress.Home_Address.substring(0,8)}+${MyAddress.Home_Address.substring(9,11)}`)),
             Phone: MyAddress.phone,
             Private: MyAddress.private,
             }});
@@ -274,6 +271,9 @@ GetMyAddress = async () => {
         this.props.navigation.navigate('MapScreen');
    } 
 
+   goEmergency = () => {
+    this.props.navigation.navigate('Emergency');
+   }
 
 
    ShowMyInfo = () => {
@@ -289,10 +289,15 @@ GetMyAddress = async () => {
     render() {
         return ( 
 
-        	<ScrollView ref="scrollView">
+        	<ScrollView ref="scrollView" >
+                <Header
+                placement="center"
+                backgroundColor='#42A5F5'
+                centerComponent={{ text: this.state.place, style: { color: '#fff' } }}
+                />
     
                 <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between',  }}>
-                    <CreateTile data={{name: this.state.place, URI: "http://layepro.com/wp-content/uploads/2014/05/Nature-Belle_10.jpg" }} function = {this.goEvents} />
+                    <CreateTile data={{name: 'Emergency', URI: "https://img.gta5-mods.com/q95/images/ambulance-samu-french-paramedic/7e327c-20170203203437_1.jpg" }} function = {this.goEmergency} />
                     <CreateTile data={Favorite_Array[3]} function = {this.goEvents} />
                     <CreateTile data={Favorite_Array[4]} function = {this.goMapAdd} />
                 </View>

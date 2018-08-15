@@ -43,7 +43,6 @@ static navigationOptions = {
       saveddata: { first_name: "", last_name: "", Home_Address: "", phone: "", private: ""},
     };
     this.GetPhoneNumber();
-    this.GetRegion();
   }
 
 
@@ -51,7 +50,6 @@ static navigationOptions = {
 GetPhoneNumber = async () => {
     var PhoneNumber = await GetData('PhoneNumber');
     this.setState({phone: PhoneNumber});
-    this.setState({glcode: Code()});
 }
 SubmitGLCode = async () => {
     var data =  { 
@@ -67,12 +65,6 @@ SubmitGLCode = async () => {
       setTimeout( () => {alert('Your address have been stored in our database')}, 1000);
       this.props.navigation.navigate('Home');   
     }
-}
-
-
-GetRegion = async () => {
-  var Region = await PostAPI('getaddress/glcode', {GLCODE: "86FQ9CVP+QF"} );
-  console.log(Region);
 }
 
 

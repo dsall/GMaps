@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const Link = 'https://e97caadc.ngrok.io/';
+const Link = 'http://gmaps.xyz:3002/';
 
 PostAPI = async (path, data) =>{
     try {
