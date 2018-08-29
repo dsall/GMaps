@@ -1,5 +1,21 @@
 {
-  "expo": {
-    "sdkVersion": "27.0.0"
+    "expo": {
+      "name": "GMaps Test",
+      "slug": "Gmaps",
+      "sdkVersion": "27.0.0",
+      "privacy": "public",
+      "primaryColor": "#42A5F5",
+      "icon": "./gmapslogo.png",
+      "ios": {
+        "bundleIdentifier": "com.gmaps.gmapstest"
+      },
+      "android": {
+        "package": "com.gmaps.gmapstest",
+        "config": {
+          "googleMaps": {
+            "apiKey": "AIzaSyA1cKMU89aTjvQsKtB2vxPKSPa8y9QcPTw"
+          }
+      }
   }
+}
 }
