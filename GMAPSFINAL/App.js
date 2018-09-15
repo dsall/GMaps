@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text,Modal, Image, TouchableOpacity, KeyboardAvoidingView , ActivityIndicator} from 'react-native';
 import LoginFlow from './Components/Screens/LogIn/LogIn';
 import HomeScreen from './Components/Screens/Home/Home';
-import MyComponent from './Components/Screens/Home/AddressDialog';
+
+const MainApp = require('./Components/Screens/Navigation/Navigation').MenuStack;
+
 export default class App extends Component {
   render(){
 
   return(
-    <MyComponent />
+    <MainApp />
     );
   }
 }

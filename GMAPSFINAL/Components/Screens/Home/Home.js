@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Dimensions, ScrollView, Image, TouchableOpacity, ImageBackground, KeyboardAvoidingView} from 'react-native';
-import { LinearGradient, Constants } from 'expo';
-import {Paper , Searchbar,  Dialog, DialogContent, Paragraph} from 'react-native-paper';
-import {Tile, Icon} from 'react-native-elements';
+import { StyleSheet, View, Text, Dimensions, ScrollView, Image, TouchableOpacity, ImageBackground, KeyboardAvoidingView, TouchableWithoutFeedback, Share, Platform, Linking} from 'react-native';
+import { Constants, Location, Permissions } from 'expo';
+import {Paper , Searchbar,  Chip, TextInput} from 'react-native-paper';
+import {Icon} from 'react-native-elements';
+import PhoneInput from "react-native-phone-input";
+
+
 
 import Swiper from 'react-native-swiper';
 
+var ccam = 'SN';
+var ccode = '';
+var pays = 'Senegal';
+var t = false;
 const Storage = require('../../Methods/Storage/Storage');
 const api = require('../../Methods/API/http');
 
@@ -17,6 +24,8 @@ const police = require ('../../../Assets/Images/police.jpg');
 const Friends = require ('../../../Assets/Images/friends.jpg');
 const Find = require ('../../../Assets/Images/MOCKUP.jpg');
 const Home = require ('../../../Assets/Images/home.jpeg');
+const Dialpad = require ('../../../Assets/Images/dialpad.png');
+const ambulance = require ('../../../Assets/Images/ambulance.jpg');
 
 const qrcode = require ('../../../Assets/Images/qrcode.png');
 
@@ -24,295 +33,617 @@ let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
 
 
-const ShowCity = (props) => {
+const colors = ['#2dc937', '#99c140', '#e7b416', '#db7b2b', '#cc3232'];
+
+const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
+
+const Emergency = (props) => {
   return(
-    <Paper
+    <View
     style={{
-      backgroundColor: 'white',
-      elevation: 12,
-      height: 0.075*height,
-      marginTop: 0.01*height,
-      marginHorizontal: 0.025*width,
-      borderRadius: 5,
-      borderWidth: 0.5,
-      borderColor: '#42A5F5',
-      flexDirection: 'row',
-      alignItems: 'center',
-      position: 'relative',
+      flexDirection: 'column',
+      top: -0.1*height,
     }}
     >
-            <Image
-            source = {Gmapslogo}
-            style={{
-              width: 0.075*height,
-              height: 0.1*width,
-              justifyContent: 'flex-start',
-            }}
-            />
-            <Text
-              style={{
-                backgroundColor: 'transparent',
-                color: 'black',
-                
-              }}>
-              {props.address}
-            </Text>
-    </Paper>
-  );
-
-
-}
-
-const EmergencyCard = () => {
-  return(
-    <View>
-      <Paper>
-        <Tile imageSrc = {police}
-            contentContainerStyle = {{borderRadius: 10, borderTopLeftRadius: 5,
-              borderTopRightRadius: 5,}}
-            containerStyle={{
-              marginHorizontal: 0.025*width,
-              marginTop: 10,
-              height: 0.2*height,
-              width: 0.95*width,
-            }}
-            imageContainerStyle={{borderRadius: 10}}
-            height={0.2*height}
-            width={0.95*width}
-            featured={true}
-        /> 
-        <TouchableOpacity>
-        <View style={{
-            backgroundColor: '#D50000',
-            alignContent: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderBottomLeftRadius: 5,
-            borderBottomRightRadius: 5,
-            width: 0.95*width,
-            marginHorizontal: 0.025*width,
-            
-        }}> 
-              <Text style={{
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: 26,
-                textAlign: 'center',
-              
-              }}>URGENCES</Text>
-
-        </View>
-        </TouchableOpacity>
-      </Paper>
-    </View>
-    
-  );
-}
-
-const ShowCard = (props) => {
-  return(
-
-           <Paper
-           elevation={5}
-           style={{
-          width: 0.95*width,
-          height: 0.20*height,
-          borderRadius: 5,
-          borderWidth: 0.1,
-          borderColor: 'black',
-          marginTop: 10,
-          marginHorizontal: 0.025*width,
-          }}
+          <TouchableWithoutFeedback
+          onPress={props.function}
+          >
+          <Paper
+           elevation={10}
+           style={{height: 0.20*height, width: 0.95*width, marginHorizontal: 0.025*width, borderRadius: 0.01*width}}
            >
 
-              <ImageBackground
-               resizeMode="cover"
-               style={{width: '100%', height: '100%', borderRadius: 10, }}
-               opacity={0.9}
-               source={props.Image}
-               >
-               <Text
-               style={{
-                 textAlign: 'center',
-                 textAlignVertical:'center',
-                 marginVertical: 0.08*height,
-                 color: 'white',
-                 fontWeight: 'bold',
-                 fontSize: 26,
-               }}
-               >{props.title}</Text>
-               </ImageBackground>
+           <Image source={ambulance} style = {{flex:1, width: 0.95*width, height: 0.10*height, resizeMode: 'contain'}} />
           
+           <View
+           style={{
+                backgroundColor: '#D50000',
+                borderBottomLeftRadius: 5,
+                borderBottomRightRadius: 5,
+                width: 0.95*width,  
+            }}
+           >
+                  <Text style={{
+                    color: 'white',
+                    fontWeight: 'bold',
+                    fontSize: 26,
+                    textAlign: 'center',
+                  
+                  }}>URGENCES</Text>
+            </View>
 
              </Paper>
-    
+
+             </TouchableWithoutFeedback>
+
+    </View>
   );
 }
 
-const FindCard = (props) => {
+
+
+
+const GetAddress = (props) => {
   return(
-    <KeyboardAvoidingView>
-        <Paper
-        elevation={5}
+    <View
+    style={{
+      flexDirection: 'column',
+      justifyContent: 'center',
+      top: -0.08*height,
+    }}
+    >
+          <TouchableWithoutFeedback
+          onPress={() => console.log('pressed')}
+          >
+          <Paper
+           elevation={10}
+           style={{height: 0.20*height, width: 0.95*width, marginHorizontal: 0.025*width, borderRadius: 0.01*width}}
+           >
+          <View
+          style={{flexDirection: "row", flex: 3}}
+          >
+          <View
+          style={{flex: 3}}
+          >
+          <View style={{flexDirection: 'row', alignContent: 'center', alignItems: 'center', justifyContent: 'center'}}> 
+          <Icon name="location-on" />
+          <Text
+          style={{fontSize: 18}}
+          >Your Location</Text>
+          </View>
+          <View style={{flexDirection: 'row', alignContent: 'center', alignItems: 'center', justifyContent: 'center'}}>
+            <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              
+            }}
+            >G-Code:</Text>
+            <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              letterSpacing: 2,
+            }}
+            >{props.glcode.slice(0,4)}</Text>
+            <TouchableOpacity
+            style={{flexDirection: 'row', borderWidth: 2, borderColor: '#42A5F5'}}
+            >
+            <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              letterSpacing: 3,
+            }}
+            >{props.glcode.slice(4,7)}</Text>
+            <Text style={{fontSize: 20, color: '#42A5F5', fontWeight: 'bold',}}>-</Text>
+            <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              letterSpacing: 3,
+            }}
+            >{props.glcode.slice(8,11)}</Text>
+            </TouchableOpacity>
+          </View>
+          <Text
+          style={{textAlign: 'center', fontSize: 16}}
+          >{props.city}</Text>
+          <View
+          style={{flexDirection: 'row', justifyContent: 'space-evenly', alignContent: 'center', alignItems: 'center'}}
+          >
+          <TouchableOpacity>
+          <Icon
+          raised
+          name='save'
+          color='green'
+          onPress={() => console.log('bus')} />
+          </TouchableOpacity>
+          <TouchableOpacity
+          onPress={props.Share}
+          >
+          <Icon
+          raised
+          name='share'
+          color='#42A5F5'
+          />
+          </TouchableOpacity>
+          </View>
+
+
+          </View>
+
+          <View
+          style={{flex: 1, justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}
+          >
+          <Paper
+          elevation={5}
+            style={{
+              width: 0.20*width,
+              height: 0.20*width,
+              borderRadius: 0.1*width,
+              backgroundColor: props.color,
+            }}
+          >
+
+          </Paper>
+
+          </View>
+
+          </View>
+
+          </Paper>
+
+          </TouchableWithoutFeedback>
+
+    </View>
+  );
+  
+}
+
+const AddressBook = (props) => {
+  return(
+    <View
+    style={{
+      flexDirection: 'column',
+      justifyContent: 'center',
+      top: -0.05*height,
+
+    }}
+    >
+          <TouchableWithoutFeedback
+          onPress={() => console.log('pressed')}
+          >
+          <Paper
+           elevation={10}
+           style={{height: 0.17*height, width: 0.95*width, marginHorizontal: 0.025*width, borderRadius: 0.01*width, justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
+           >
+           <Text>Address Book</Text>
+          </Paper>
+
+          </TouchableWithoutFeedback>
+
+    </View>
+  );
+  
+}
+
+
+const Search = (props) => {
+
+  return(
+    <View
+    style={{
+      flexDirection: 'column',
+      justifyContent: 'center',
+      top: -0.03*height,
+
+    }}
+    >
+          <TouchableWithoutFeedback
+          >
+          <Paper
+           elevation={10}
+           style={{height: 0.15*height, width: 0.95*width, marginHorizontal: 0.025*width, borderRadius: 0.01*width, justifyContent: 'center', alignContent: 'center', alignItems: 'center', flexDirection: 'row'}}
+           >
+           <View
+           style={{flex: 3}}
+           >
+           <View
+           style={{
+             flexDirection: 'row',
+             justifyContent: 'center',
+             alignContent: 'center'
+           }}
+           >
+              <TouchableOpacity
+              onPress={props.SearchGCode}
+              style={{
+                borderWidth: 1,
+                borderColor: 'gray',
+                width: 0.20*width,
+                height: 0.05*height,
+                backgroundColor: props.gcodecolor,
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
+                marginHorizontal: 20, 
+                borderRadius: 5, 
+              }}
+              >
+                <Text>G-Code</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+              onPress={props.SearchPhone}
+              style={{
+                borderWidth: 1,
+                borderColor: 'gray',
+                width: 0.20*width,
+                height: 0.05*height,
+                backgroundColor: props.phonecolor,
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
+                marginHorizontal: 20, 
+                borderRadius: 5, 
+              }}
+              >
+                <Text>Phone</Text>
+              </TouchableOpacity>
+             </View>
+           
+           {
+             props.searchphone === true ? 
+              <View
+              style={{
+                marginHorizontal: 10,
+                marginVertical: 10,
+                borderWidth: 1,
+                borderColor: 'grey'
+              }}
+              >
+              <PhoneInput 
+              ref={ref => {
+              this.phone = ref;
+              }}
+              initialCountry="sn"
+              flagStyle={{width:0.10*width, height: 0.04*height}}
+              textStyle={{fontSize: 14}}
+              textProps={{placeholser: 'Enter Your Phone Number'}}
+              />
+              </View>
+               : 
+                 <Searchbar />
+             
+           }
+           
+    
+           </View>
+           <View
+           style={{flex: 1, justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
+           >
+           <TouchableOpacity
+           onPress={props.GoScan} 
+           style={{
+             flexDirection: 'column',
+             justifyContent: 'center',
+             alignContent: 'center',
+             alignItems: 'center'
+           }}
+           >
+           <Text>Scan Code</Text>
+           <Image source={qrcode} style={{height: 0.10*height, width: 0.10*height}} />
+           </TouchableOpacity>
+             
+           </View>
+           
+          </Paper>
+
+          </TouchableWithoutFeedback>
+
+    </View>
+  );
+  
+}
+
+
+const Card = (props) => {
+  return(
+        <View
         style={{
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
+          marginBottom: 10,
+        }}
+        >
+        <Paper
+        elevation={7}
+        style={{
+          height: 0.32*height,
           width: 0.95*width,
-          height: 0.15*height,
-          borderRadius: 5,
-          borderWidth: 0.1,
-          borderColor: 'black',
-          marginVertical:10,
-          marginHorizontal: 0.025*width,
+          borderRadius: 10,
         }}
         >
         <View
         style={{
-          flexDirection: 'row',
-          flex:1,
+          alignContent: 'center',
+          alignItems: 'center',
+          flex: 1, 
         }}
         >
-          <View
-          style={{
-            flex:1, 
-            flexDirection: 'column',
-            justifyContent: 'space-evenly',
-
-          }}
-          >
-            <TouchableOpacity 
-            
-            onPress={props.GetFunction}
-            style={{
-              flexDirection: 'row',
-              alignItems:'center',
-              borderWidth: 0.1,
-              borderRadius: 5,
-              marginHorizontal: 2, 
-            }}>
-            <Image source = {Gmapslogo} 
-            style={{
-              width: 0.1*width,
-              height: 0.1*width, 
-
-            }}
-            />
-            <Text
-            style={{
-              
-            }}
-            >Get Address</Text>
-            </TouchableOpacity>
-
-             <TouchableOpacity 
-             
-             style={{
-              flexDirection: 'row',
-              alignItems:'center',
-              borderWidth: 0.1,
-              borderRadius: 5,
-              marginHorizontal: 2, 
-            }}>
-
-            <Image source = {qrcode} 
-            style={{
-              width: 0.1*width,
-              height: 0.1*width, 
-
-            }}
-            />
-            <Text
-            style={{
-              
-            }}
-            >Scan Code</Text>
-            </TouchableOpacity>
-
-          </View>
-
-          <View
-          style={{
-            flex:2, 
-            alignItems: 'center',
-            alignContent: 'center',
-            justifyContent: 'center'
-          }}
-          >
-          <Searchbar />
-            
-          </View>
+              <TouchableOpacity onPress={props.ShowCard}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems:'center', marginBottom: 0}}>
+                        <Text style={{marginRight: 10}}>Home</Text>
+                            <Image 
+                            style={{width:0.13*width, height:0.13*width, borderRadius: 0.13*width, justifyContent:'center'}}
+                            source= {{uri: "https://www.w3schools.com/w3images/avatar2.png"}} 
+                            />
+                        <Text style={{marginLeft: 10}}>Address</Text>
+                    </View>
+              </TouchableOpacity>
         </View>
+        <View
+        style={{
+          alignContent: 'center',
+          alignItems: 'center',
+          flex: 2,
+          flexDirection: 'row',
           
+        }}
+        >
+        <View
+        style={{flexDirection: 'column', flex: 2, marginLeft: 0.05*width}}
+        >
+        <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: "flex-start",
+          alignContent: 'center',
+          alignItems: 'center',
+          
+        }}
+        >
+        <Icon name='person' color ='#42A5F5' size={0.075*width} />
+        <Text
+        style={{
+          fontSize: 0.05*width,
+        }}
+        >Djibril Sall</Text>
+        </View>
+        <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: "flex-start",
+          alignContent: 'center',
+          alignItems: 'center',
+          
+        }}
+        >
+        <Icon name='phone' color ='#42A5F5' size={0.075*width} />
+        <Text
+        style={{
+          fontSize: 0.05*width,
+        }}
+        >+15134490428</Text>
+        </View>
+        <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: "flex-start",
+          alignContent: 'center',
+          alignItems: 'center',
+          
+        }}
+        >
+        <Icon name='home' color ='#42A5F5' size={0.075*width} />
+        <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              letterSpacing: 2,
+            }}
+            >{props.glcode.slice(0,4)}</Text>
+            <TouchableOpacity
+            style={{flexDirection: 'row', borderWidth: 2, borderColor: '#42A5F5'}}
+            >
+            <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              letterSpacing: 3,
+            }}
+            >{props.glcode.slice(4,7)}</Text>
+            <Text style={{fontSize: 20, color: '#42A5F5', fontWeight: 'bold',}}>-</Text>
+            <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              letterSpacing: 3,
+            }}
+            >{props.glcode.slice(8,11)}</Text>
+            </TouchableOpacity>
+        </View>
+
+
+        </View>
+        <View style={{flex: 1, justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}>
+        <Image source={qrcode} style={{width: 0.25*width, height: 0.15*height}} />
+          
+        </View>
+
+          
+        </View>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', flex:1 , marginBottom: 10}}>
+            <TouchableOpacity>
+            <Icon
+            raised
+            name='directions-car'
+            color='#42A5F5'
+            onPress={props.Car} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+            <Icon
+            raised
+            name='security'
+            color='#42A5F5'
+            />
+            </TouchableOpacity>
+            <TouchableOpacity
+            onPress={props.Share}
+            >
+            <Icon
+            raised
+            name='share'
+            color='#42A5F5'
+            />
+            </TouchableOpacity>
+        </View>
+
         </Paper>
-    </KeyboardAvoidingView>
-    
-  );
+        </View>
+   ); 
 }
-
-
-
 class HomeScreen extends Component {
+ 
   constructor(props) {
     super(props);
 
     this.state = {
       glcode: '',
-      latitude: null,
-      longitude: null,
       error: null,
       place: '',
       city: '',
-      firstQuery: '',
-      visible: 'false'
+      color: 'red',
+      latitude: '',
+      longitude: '',
+      errorMessage: null,
+      searchphone: false,
+      phonecolor: 'white',
+      gcodecolor: 'green'
     };
   }
 
-  componentDidMount() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          glcode: encode(position.coords.latitude, position.coords.longitude),
-          error: null,
-        });
-        this.GetCity();
-      },
-      (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-    );
+    componentWillMount() { 
+        this._getLocationAsync();
+    }
+
+    _getLocationAsync = async () => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            this.setState({
+            errorMessage: 'Permission to access location was denied',
+            });
+        }
+    
+        Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
+        };
+    locationChanged = (location) => {
+  
+    region = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        glcode:  encode(location.coords.latitude, location.coords.longitude),
+        accuracy: location.coords.accuracy,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+    },
+  
+    this.setState({location, region});
+    this.setState({glcode: `${this.state.region.glcode.substr(0,7)}+${this.state.region.glcode.substr(7,10)}`});
+    this.GetCity();
+    this.checkAccurracy();
+    
+}
+
+checkAccurracy = () => {
+  var a = this.state.region.accuracy;
+  if(a <= 10){
+    this.setState({color: colors[0]});
   }
+  if(a > 10 && a <= 12.5){
+    this.setState({color: colors[1]});
+  }
+  if(a > 12.5 && a <= 15){
+    this.setState({color: colors[2]});
+  }
+  if(a > 15 && a <= 17.5){
+    this.setState({color: colors[3]});
+  }
+  if(a > 17.5 && a <= 20){
+    this.setState({color: colors[4]});
+  }
+}
 
 
 GetCity =  async () =>{
-    var Region = await PostAPI('getaddress', {latitude: this.state.latitude, longitude: this.state.longitude});
+    var Region = await PostAPI('getaddress', {latitude: this.state.region.latitude, longitude: this.state.region.longitude});
+    console.log(this.state.region);
     this.setState({place: Region.address, city: Region.city}); 
 }
-
-GetAddress = () => {
-  this.setState({visible: true});
-  console.log('hello');
+goEmergency = () => {
+  this.props.navigation.navigate('Emergency');
 }
 
-_hideDialog = () => this.setState({ visible: false });
+SearchByPhone = () =>{
+  this.setState({searchphone: true, phonecolor: 'green', gcodecolor: 'white'});
+}
+SearchByGCode = () => {
+  this.setState({searchphone: false, phonecolor: 'white', gcodecolor: 'green'});
+}
+GoToScan = () => {
+  this.props.navigation.navigate('Scan');
+}
+ShowMyInfo = () => {
+  this.setState({showInfo: !this.state.showInfo});
+  if(this.state.showInfo){
+    this.refs.scrollView.scrollToEnd();
+  }
+  else{
+    this.refs.scrollView.scrollTo({y:0, animated: true});
+  }
+}
+
+ShareAddress = () => {
+  Share.share({
+    message: `Address GMAPS partager:${this.state.glcode}. Vous pouvez l'entrer dans l'application pour localisez la personne.`,
+    title: 'Addresse Sur GMaps'
+    }, {
+      dialogTitle: 'Addresse a partager',
+
+      tintColor: 'green'
+    })
+    .then(alert('shared'))
+    .catch((error) => this.setState({result: 'error: ' + error.message}));
+  }
+
+  carPressed = () =>{
+
+    if (Platform.OS === 'ios') {
+        Linking.openURL(`http://maps.google.com/maps/dir/-4.2336843,15.275756/${this.state.region.latitude},${this.state.region.longitude}/`);
+      } else {
+        Linking.openURL(`https://www.google.com/maps/dir/-4.2336843,15.275756/${this.state.region.latitude},${this.state.region.longitude}/`);
+      }
+    };
 
   render(){
 
   return(
-        <View
-        style = {{backgroundColor: 'white', flex:1}}
-         >
-           <View style={styles.statusBar} />
-           <KeyboardAvoidingView>
-           <ShowCity  address={this.state.place}/>
-           <ScrollView>
-             <EmergencyCard />
-             <ShowCard Image = {Friends} title ='Saved and Recent Addresses'/>
-             <FindCard GetFunction= {this.GetAddress}/>
-             <ShowCard Image = {Home} title ='Add Your House'/>
-             <ShowCard Image = {Home} title ='Add Your House'/>
-             <ShowCard Image = {Home} title ='Add Your House'/>
-           </ScrollView>
-           </KeyboardAvoidingView>
-        </View>
+          <ScrollView ref="scrollView">
+           <View style={{height: 0.175*height, backgroundColor:'#42A5F5', top:0 }}
+           />
+            <Emergency function={this.goEmergency}/>
+            <GetAddress glcode={this.state.glcode} city={this.state.place} color={this.state.color} Share={this.ShareAddress}/>
+            <AddressBook />
+            <Search searchphone={this.state.searchphone}  SearchPhone={this.SearchByPhone} SearchGCode={this.SearchByGCode} phonecolor ={this.state.phonecolor} gcodecolor={this.state.gcodecolor} GoScan={this.GoToScan}/>
+            <Card ShowCard ={this.ShowMyInfo} glcode={this.state.glcode} Share={this.ShareAddress} Car={this.carPressed}/>
+            <TouchableOpacity
+            style={styles.button}  
+            onPress={this.onLoginPress} 
+            >
+            <Text style={styles.buttonText}>Signout</Text>
+            </TouchableOpacity>
+            </ScrollView>
     );
   }
 }
@@ -329,6 +660,21 @@ let styles = StyleSheet.create({
     backgroundColor: "#C2185B",
     height: Constants.statusBarHeight,
     backgroundColor: '#42A5F5',
+  },
+  button:{
+    backgroundColor: '#42A5F5',
+    height: 40,
+    borderRadius: 5,
+    marginHorizontal: 10,
+    marginVertical: 10,
+  },
+  buttonText:{
+    fontSize: 24,
+    fontWeight: '300',
+    color: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center'
   },
 
 })
