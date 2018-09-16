@@ -208,17 +208,18 @@ const AddressBook = (props) => {
       flexDirection: 'column',
       justifyContent: 'center',
       top: -0.05*height,
+      marginBottom: 10, 
 
     }}
     >
           <TouchableWithoutFeedback
-          onPress={() => console.log('pressed')}
+          onPress={props.function}
           >
           <Paper
            elevation={10}
            style={{height: 0.17*height, width: 0.95*width, marginHorizontal: 0.025*width, borderRadius: 0.01*width, justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
            >
-           <Text>Address Book</Text>
+           <Text>{props.title}</Text>
           </Paper>
 
           </TouchableWithoutFeedback>
@@ -603,6 +604,13 @@ ShowMyInfo = () => {
     this.refs.scrollView.scrollTo({y:0, animated: true});
   }
 }
+goMapAdd = () =>{
+  this.props.navigation.navigate('Map');
+
+}
+goAddressBook = () =>{
+
+}
 
 ShareAddress = () => {
   Share.share({
@@ -634,7 +642,8 @@ ShareAddress = () => {
            />
             <Emergency function={this.goEmergency}/>
             <GetAddress glcode={this.state.glcode} city={this.state.place} color={this.state.color} Share={this.ShareAddress}/>
-            <AddressBook />
+            <AddressBook title="Your Addresses"/>
+            <AddressBook title = "Add your Home Address" function={this.goMapAdd}/>
             <Search searchphone={this.state.searchphone}  SearchPhone={this.SearchByPhone} SearchGCode={this.SearchByGCode} phonecolor ={this.state.phonecolor} gcodecolor={this.state.gcodecolor} GoScan={this.GoToScan}/>
             <Card ShowCard ={this.ShowMyInfo} glcode={this.state.glcode} Share={this.ShareAddress} Car={this.carPressed}/>
             <TouchableOpacity

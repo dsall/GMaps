@@ -7,6 +7,8 @@ import HomeScreen from '../Home/Home';
 import GetAddress from '../Home/GetAddress';
 import ScanCode from '../Home/ScanCode';
 import Emergency from '../Emergency/Emergency';
+import MapScreen from '../AddingAddress/MapScreen';
+
 
 
 export const MenuStack = createSwitchNavigator({
@@ -15,7 +17,9 @@ export const MenuStack = createSwitchNavigator({
     Emergency: {screen: Emergency},
     Get: {screen: GetAddress},
     LogIn:{screen: LoginFlow},
+    Map: {screen: MapScreen},
     
 });
+
 
 
