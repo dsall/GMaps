@@ -18,7 +18,11 @@ export const MenuStack = createSwitchNavigator({
     Get: {screen: GetAddress},
     LogIn:{screen: LoginFlow},
     Map: {screen: MapScreen},
-    
+});
+
+
+export const LogInStack = createSwitchNavigator({
+    LogIn: { screen: LoginFlow },
 });
 
 

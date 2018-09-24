@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {  Text, View, StyleSheet, TouchableOpacity, Image, Alert, Dimensions } from 'react-native';
 import {  Location, MapView, Permissions } from 'expo';
-import { Icon } from 'react-native-elements';
+import { FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements'
 const encode = require('../../Methods/Location/pluscode').encode;
 const decode = require('../../Methods/Location/pluscode').decode;
 const Storage = require('../../Methods/Storage/Storage');
@@ -61,35 +61,7 @@ const SubmitScreen = (props) => {
         <View
         style={{flexDirection: 'column'}}
         >
-            <Paper
-            elevation={17}
-            style={{
-                width: 0.95*width,
-                height: 0.40*height,
-                borderRadius: 10,
-                justifyContent: 'center',
-                alignContent: 'center', 
-                alignItems: 'center'
 
-            }}
-            >
-            <Image source ={gmaps}
-            style = {{ width: 60, height: 60, borderRadius: 60, }}
-            />
-            <Text style={{fontWeight: 'bold', fontSize: 20}}>+15134490428</Text>
-            <GLCode glcode={props.glcode} />
-            <TextInput />
-            <TextInput />
-
-            <Icon 
-            containerStyle={{position: 'absolute', bottom: 0}}
-            reverse
-            size = {30}
-            name='cancel'
-            color='red'
-            onPress={props.goHome} 
-            />    
-           </Paper>
        
            
     </View>
@@ -146,6 +118,45 @@ constructor() {
     this.setState({location, region});
     }
 
+    privatePress = () =>{
+    this.setState(state => ({
+        private: !state.private,
+    }));
+
+    if(this.state.private){
+    this.setState({
+        swcolor: "green",
+        prtext: "Private",
+    })
+    }
+    else{
+    this.setState({
+        swcolor: "lightgray",
+        prtext: "Public",
+    })
+    }
+    console.log(this.state.private);
+    }
+    
+
+    SubmitGLCode = async () => {
+        var data =  { 
+                        first_name: this.state.firstname, 
+                        last_name: this.state.lastname,
+                        Home_Address: this.state.glcode,
+                        phone: this.state.phone,
+                        private: this.state.private,         
+                    };
+        // console.log(data);
+        const Response = await PostAPI('AddAddress', data );
+        // console.log(Response);
+        if(Response){
+          StoreData('MyAddress', Response.AddedAddress);
+          setTimeout( () => {alert('Your address have been stored in our database')}, 1000);
+          this.props.navigation.navigate('Home');   
+        }
+    }
+
 
 
 
@@ -161,7 +172,91 @@ constructor() {
                 alignItems: 'center'
             }}
             >
-                <SubmitScreen PhoneNumber={this.state.phone} glcode={this.state.glcode} goHome={ () => {this.props.navigation.navigate('Home')}}/>
+            <Paper
+            elevation={7}
+            style={{
+                width: 0.95*width,
+                height: 0.40*height,
+                borderRadius: 10,
+                alignContent: 'center', 
+                alignItems: 'center',
+                flexDirection: 'column'
+            }}
+            >
+            <Image source ={gmaps}
+            style = {{ width: 25, height: 25, borderRadius: 25, }}
+            />
+            <Text style={{fontWeight: 'bold', fontSize: 20}}>Phone: {this.state.phone}</Text>
+            <GLCode glcode={this.state.glcode} />
+            <View
+            style={{flexDirection: 'row', justifyContent: 'space-between'}}
+            >
+                <TextInput 
+                 style={{flex:1, marginHorizontal: 10, marginVertical: 5, }} 
+                 placeholder ="First Name" 
+                 onChangeText={(firstname) => this.setState({firstname})}
+                 value={this.state.firstname}
+                 />
+                 <TextInput 
+                 style={{flex:1, marginHorizontal: 10, marginVertical: 5, }} 
+                 placeholder ="Last Name" 
+                 onChangeText={(lastname) => this.setState({lastname})}
+                 value={this.state.lastname}
+                 />
+            </View>
+            <View
+            style={{
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center', 
+                justifyContent: 'center'
+            }}
+            >
+
+                    <Text
+                    style={{
+                        flex:1,
+                        textAlign: 'center'
+                    }}
+                    >Press Here to change Privacy </Text>
+                    <TouchableOpacity   
+                    style={{height: 40,
+                            flex: 1,
+                            width: 0.30*width,
+                            borderRadius: 5,
+                            marginTop: 10,
+                            marginHorizontal: 10, 
+                            backgroundColor: this.state.swcolor,
+                            }} 
+                    onPress={this.privatePress} 
+                    >
+                    <Text style={styles.buttonText} >{this.state.prtext}</Text> 
+                    </TouchableOpacity>  
+            
+            </View>
+            <Text
+            style={{textAlign: 'center'}}
+            >
+            By making your address public, you prevent people from searching it using your phone number. 
+            You can always share your GL-Code directly with them.
+            </Text>
+                   <Icon 
+                    containerStyle={{}}
+                    reverse
+                    size = {30}
+                    name='add'
+                    color='green'
+                    onPress={this.SubmitGLCode}
+                    />   
+           </Paper>
+            <Icon 
+                containerStyle={{position: 'absolute', bottom: 0}}
+                reverse
+                size = {30}
+                name='cancel'
+                color='red'
+                onPress={ () => {this.props.navigation.navigate('Home')} }
+                />    
             </View>
         );
     }
@@ -179,7 +274,7 @@ constructor() {
         coordinate={this.state.location.coords}
        
         > 
-        {console.log(this.state)}
+        {/* {console.log(this.state)} */}
         </MapView.Marker>
         </MapView>
         <Paper
@@ -255,7 +350,7 @@ button:{
   height: 40,
   borderRadius: 5,
   marginHorizontal: 10,
-  paddingHorizontal: 20,
+  paddingHorizontal: 10,
   marginVertical: 10,
 },
 buttonText:{

@@ -211,18 +211,23 @@ const AddressBook = (props) => {
       marginBottom: 10, 
 
     }}
-    >
-          <TouchableWithoutFeedback
+    >    
+          <TouchableOpacity
           onPress={props.function}
           >
-          <Paper
-           elevation={10}
-           style={{height: 0.17*height, width: 0.95*width, marginHorizontal: 0.025*width, borderRadius: 0.01*width, justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
-           >
-           <Text>{props.title}</Text>
-          </Paper>
+            <ImageBackground source={Home} style={{height: 0.20*height, width: 0.95*width, marginHorizontal: 0.025*width, borderRadius: 0.01*width, justifyContent: 'center', alignContent: 'center', alignItems: 'center', opacity: .8}} resizeMode= 'cover'>
+              <Text
+              style={{
+                color: "white",
+                fontSize: 30,
+                opacity: 5,
+              }}
+              >ADD YOUR ADDRESS</Text>
+            </ImageBackground>
+          </TouchableOpacity>
 
-          </TouchableWithoutFeedback>
+          
+  
 
     </View>
   );
@@ -410,7 +415,7 @@ const Card = (props) => {
         style={{
           fontSize: 0.05*width,
         }}
-        >Djibril Sall</Text>
+        >{props.data.Name}</Text>
         </View>
         <View
         style={{
@@ -426,7 +431,7 @@ const Card = (props) => {
         style={{
           fontSize: 0.05*width,
         }}
-        >+15134490428</Text>
+        >{props.data.Phone}</Text>
         </View>
         <View
         style={{
@@ -444,7 +449,7 @@ const Card = (props) => {
               fontWeight: 'bold',
               letterSpacing: 2,
             }}
-            >{props.glcode.slice(0,4)}</Text>
+            >{props.data.Address.slice(0,4)}</Text>
             <TouchableOpacity
             style={{flexDirection: 'row', borderWidth: 2, borderColor: '#42A5F5'}}
             >
@@ -454,7 +459,7 @@ const Card = (props) => {
               fontWeight: 'bold',
               letterSpacing: 3,
             }}
-            >{props.glcode.slice(4,7)}</Text>
+            >{props.data.Address.slice(4,7)}</Text>
             <Text style={{fontSize: 20, color: '#42A5F5', fontWeight: 'bold',}}>-</Text>
             <Text
             style={{
@@ -462,7 +467,7 @@ const Card = (props) => {
               fontWeight: 'bold',
               letterSpacing: 3,
             }}
-            >{props.glcode.slice(8,11)}</Text>
+            >{props.data.Address.slice(7,11)}</Text>
             </TouchableOpacity>
         </View>
 
@@ -521,8 +526,16 @@ class HomeScreen extends Component {
       errorMessage: null,
       searchphone: false,
       phonecolor: 'white',
-      gcodecolor: 'green'
+      gcodecolor: 'green',
+      my_address: {
+        Name: '',
+        Address: '',
+        Phone: '',
+        Private: '',
+        geocode: '',
+      },
     };
+    this.GetMyAddress();
   }
 
     componentWillMount() { 
@@ -556,7 +569,23 @@ class HomeScreen extends Component {
     this.checkAccurracy();
     
 }
+GetMyAddress = async () => {
+  var MyAddress = await GetData('MyAddress');
+  if(MyAddress){
+      this.setState({my_address: {Name: MyAddress.first_name + ' '+ MyAddress.last_name,
+          Address: MyAddress.Home_Address,
+          geocode: (decode(`${MyAddress.Home_Address.slice(0,8)}+${MyAddress.Home_Address.slice(8,11)}`)),
+          Phone: MyAddress.phone,
+          Private: MyAddress.private,
+          }});
+          // console.log(this.state.my_address);
+  }
+  else{
+      console.log('empty'); 
+  }
 
+  return MyAddress;
+}
 checkAccurracy = () => {
   var a = this.state.region.accuracy;
   if(a <= 10){
@@ -579,7 +608,7 @@ checkAccurracy = () => {
 
 GetCity =  async () =>{
     var Region = await PostAPI('getaddress', {latitude: this.state.region.latitude, longitude: this.state.region.longitude});
-    console.log(this.state.region);
+    // console.log(this.state.region);
     this.setState({place: Region.address, city: Region.city}); 
 }
 goEmergency = () => {
@@ -611,6 +640,10 @@ goMapAdd = () =>{
 goAddressBook = () =>{
 
 }
+SignOut =  async () => {
+  StoreData('uid', 'false');
+  this.props.navigation.navigate('LogIn');
+}
 
 ShareAddress = () => {
   Share.share({
@@ -628,9 +661,9 @@ ShareAddress = () => {
   carPressed = () =>{
 
     if (Platform.OS === 'ios') {
-        Linking.openURL(`http://maps.google.com/maps/dir/-4.2336843,15.275756/${this.state.region.latitude},${this.state.region.longitude}/`);
+        Linking.openURL(`http://maps.google.com/maps/dir/${this.state.region.latitude},${this.state.region.longitude}/${this.state.my_address.geocode.latitudeCenter},${this.state.my_address.geocode.longitudeCenter}/`);
       } else {
-        Linking.openURL(`https://www.google.com/maps/dir/-4.2336843,15.275756/${this.state.region.latitude},${this.state.region.longitude}/`);
+        Linking.openURL(`https://www.google.com/maps/dir/${this.state.region.latitude},${this.state.region.longitude}/${this.state.my_address.geocode.latitudeCenter},${this.state.my_address.geocode.longitudeCenter}/`);
       }
     };
 
@@ -642,13 +675,13 @@ ShareAddress = () => {
            />
             <Emergency function={this.goEmergency}/>
             <GetAddress glcode={this.state.glcode} city={this.state.place} color={this.state.color} Share={this.ShareAddress}/>
-            <AddressBook title="Your Addresses"/>
+            {/* <AddressBook title="Your Addresses"/> */}
             <AddressBook title = "Add your Home Address" function={this.goMapAdd}/>
             <Search searchphone={this.state.searchphone}  SearchPhone={this.SearchByPhone} SearchGCode={this.SearchByGCode} phonecolor ={this.state.phonecolor} gcodecolor={this.state.gcodecolor} GoScan={this.GoToScan}/>
-            <Card ShowCard ={this.ShowMyInfo} glcode={this.state.glcode} Share={this.ShareAddress} Car={this.carPressed}/>
+            <Card ShowCard ={this.ShowMyInfo} data={this.state.my_address} Share={this.ShareAddress} Car={this.carPressed}/>
             <TouchableOpacity
             style={styles.button}  
-            onPress={this.onLoginPress} 
+            onPress={this.SignOut} 
             >
             <Text style={styles.buttonText}>Signout</Text>
             </TouchableOpacity>

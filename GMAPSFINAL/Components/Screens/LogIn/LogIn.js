@@ -31,8 +31,8 @@ export default class LoginFlow extends Component {
     const Response = await PostAPI(path, data);
     if(Response.success){
         StoreData('uid', Response.uidtoken);
-        // this.props.navigation.navigate('MainApp');
-        alert('Logged in successfully');
+        this.props.navigation.navigate('Home');
+        // alert('Logged in successfully');
     }
     else{
         alert('Wrong pin enterred, try again');
@@ -92,11 +92,10 @@ export default class LoginFlow extends Component {
                   style={{width: 0.20*width, height: 0.2*width}}
                   />
                   <ActivityIndicator   style={{marginTop: 0.25*width}}  size="large" color='#42A5F5'/>
-                  <Text style={{marginTop: 0.25*width}}> Sending you a PIN to verify your phone number </Text>
+                  <Text style={{marginTop: 0.25*width, fontSize: 20}}> Sending you a PIN to verify your phone number </Text>
                 </View>
           </View>
         </Modal>
-
 
       );
     }
@@ -113,7 +112,8 @@ export default class LoginFlow extends Component {
             <View style={styles.container2}> 
                 <Text style={{textAlign: 'center'}}> Please enter the PIN you received by text</Text>
                 <TextInput
-                style={{borderWidth: 0.5,borderRadius: 5,  borderColor: 'grey', justifyContent:'center', alignItems:'center',alignContent:'center'}}
+                style={{borderWidth: 0.5,borderRadius: 5,  borderColor: 'grey', justifyContent:'center', alignItems:'center',alignContent:'center', height: 40}}
+                underlineColorAndroid="transparent"
                 keyboardType='number-pad'
                 secureTextEntry={true}
                 maxLength={4}

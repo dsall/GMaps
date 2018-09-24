@@ -1,16 +1,59 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text,Modal, Image, TouchableOpacity, KeyboardAvoidingView , ActivityIndicator} from 'react-native';
-import LoginFlow from './Components/Screens/LogIn/LogIn';
-import HomeScreen from './Components/Screens/Home/Home';
 
+import WelcomeScreen from './Components/Screens/Welcome/Welcome';
 const MainApp = require('./Components/Screens/Navigation/Navigation').MenuStack;
+const LogInStack = require('./Components/Screens/Navigation/Navigation').LogInStack;
+const Storage = require('./Components/Methods/Storage/Storage');
+
 
 export default class App extends Component {
-  render(){
 
-  return(
-    <MainApp />
+  constructor(props) {
+    super(props);
+    this.state = {
+        userid: '',
+        isAuthenticated: false,
+        isLoading: true,
+    };
+    setTimeout( () => {
+        this.checkIfLoggedIn();
+    }, 500);
+    
+    
+}
+
+checkIfLoggedIn = async () =>{
+    try{
+    const useruid = await GetData ('uid');
+    if(useruid === 'false'){
+        this.setState({isAuthenticated: false, isLoading: false})
+    }
+    else{
+        this.setState({isAuthenticated: true, isLoading: false})
+    }
+    return useruid;
+    }
+    catch(err){
+    }
+    }
+
+  render(){
+    if(this.state.isLoading){
+      return(
+          <View style={styles.container}>
+              <WelcomeScreen />
+          </View>
+      );
+  }
+
+    return(
+        <View className="App" style={styles.container}>
+          
+          {(this.state.isAuthenticated) ? <MainApp /> : <LogInStack /> }
+        </View>
     );
+
   }
 }
 
