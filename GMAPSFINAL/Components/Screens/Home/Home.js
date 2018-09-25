@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Dimensions, ScrollView, Image, TouchableOpacity, ImageBackground, KeyboardAvoidingView, TouchableWithoutFeedback, Share, Platform, Linking} from 'react-native';
 import { Constants, Location, Permissions } from 'expo';
-import {Paper , Searchbar,  Chip, TextInput} from 'react-native-paper';
-import {Icon} from 'react-native-elements';
+import {Paper ,  Chip, TextInput} from 'react-native-paper';
+import {Icon, SearchBar} from 'react-native-elements';
 import PhoneInput from "react-native-phone-input";
 
 
 
 import Swiper from 'react-native-swiper';
-
+var search = "";
 var ccam = 'SN';
 var ccode = '';
 var pays = 'Senegal';
@@ -319,14 +319,20 @@ const Search = (props) => {
               />
               </View>
                : 
-                 <Searchbar 
-                  round
-                  clearIcon={{ color: 'red' }}
-                  onChangeText={ (text) =>{console.log(text)}}
-                  onClear={() =>{console.log('cleared')}}
-                  placeholder='Type G-CODE'
-                 
-                 />
+               
+               <SearchBar
+                containerStyle={{backgroundColor: 'white', borderColor: "white"}}
+                inputContainerStyle={{}}
+                inputStyle={{backgroundColor: 'white', color: 'black', borderColor: "black", borderWidth:2, }}
+                autoCapitalize= 'characters'
+                onChangeText={(text) =>{search=text}}
+                onSubmitEditing={props.function}
+                round
+                lightTheme
+                showLoading
+                platform="android"
+                cancelIcon={{ type: 'font-awesome', name: 'chevron-left' }}
+                placeholder='Search' />
              
            }
            
@@ -546,7 +552,7 @@ class HomeScreen extends Component {
     this.GetMyAddress();
   }
 
-    componentDidMount() { 
+    componentWillMount() { 
         this._getLocationAsync();
     }
 
@@ -575,6 +581,7 @@ class HomeScreen extends Component {
     this.setState({glcode: `${this.state.region.glcode.substr(0,7)}+${this.state.region.glcode.substr(7,10)}`});
     this.GetCity();
     this.checkAccurracy();
+    search = "";
     
 }
 GetMyAddress = async () => {
@@ -631,6 +638,9 @@ SearchByGCode = () => {
 }
 GoToScan = () => {
   this.props.navigation.navigate('Scan');
+}
+goSearch = () =>{
+  this.props.navigation.navigate('Search', {search: search})
 }
 ShowMyInfo = () => {
   this.setState({showInfo: !this.state.showInfo});
@@ -689,7 +699,7 @@ ShareAddress = () => {
             {(!this.state.added) ? <AddressBook title = "Add your Home Address" function={this.goMapAdd} image={Home}/> : 
             <AddressBook title = "Addressbook" function={this.goMapAdd} image={Home}/>
             }
-            <Search searchphone={this.state.searchphone}  SearchPhone={this.SearchByPhone} SearchGCode={this.SearchByGCode} phonecolor ={this.state.phonecolor} gcodecolor={this.state.gcodecolor} GoScan={this.GoToScan}/>
+            <Search searchphone={this.state.searchphone}  SearchPhone={this.SearchByPhone} SearchGCode={this.SearchByGCode} phonecolor ={this.state.phonecolor} gcodecolor={this.state.gcodecolor} GoScan={this.GoToScan} function={this.goSearch}/>
             <Card ShowCard ={this.ShowMyInfo} data={this.state.my_address} Share={this.ShareAddress} Car={this.carPressed}/>
             <TouchableOpacity
             style={styles.button}  
