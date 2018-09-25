@@ -25,7 +25,7 @@ const Friends = require ('../../../Assets/Images/friends.jpg');
 const Find = require ('../../../Assets/Images/MOCKUP.jpg');
 const Home = require ('../../../Assets/Images/home.jpeg');
 const Dialpad = require ('../../../Assets/Images/dialpad.png');
-const ambulance = require ('../../../Assets/Images/ambulance.jpg');
+const ambulance = require ('../../../Assets/Images/ambulance.png');
 
 const qrcode = require ('../../../Assets/Images/qrcode.png');
 
@@ -215,14 +215,14 @@ const AddressBook = (props) => {
           <TouchableOpacity
           onPress={props.function}
           >
-            <ImageBackground source={Home} style={{height: 0.20*height, width: 0.95*width, marginHorizontal: 0.025*width, borderRadius: 0.01*width, justifyContent: 'center', alignContent: 'center', alignItems: 'center', opacity: .8}} resizeMode= 'cover'>
+            <ImageBackground source={props.image} style={{height: 0.20*height, width: 0.95*width, marginHorizontal: 0.025*width, borderRadius: 0.01*width, justifyContent: 'center', alignContent: 'center', alignItems: 'center', opacity: .8}} resizeMode= 'cover'>
               <Text
               style={{
                 color: "white",
                 fontSize: 30,
                 opacity: 5,
               }}
-              >ADD YOUR ADDRESS</Text>
+              >{props.title}</Text>
             </ImageBackground>
           </TouchableOpacity>
 
@@ -319,7 +319,14 @@ const Search = (props) => {
               />
               </View>
                : 
-                 <Searchbar />
+                 <Searchbar 
+                  round
+                  clearIcon={{ color: 'red' }}
+                  onChangeText={ (text) =>{console.log(text)}}
+                  onClear={() =>{console.log('cleared')}}
+                  placeholder='Type G-CODE'
+                 
+                 />
              
            }
            
@@ -517,6 +524,7 @@ class HomeScreen extends Component {
 
     this.state = {
       glcode: '',
+      added: false,
       error: null,
       place: '',
       city: '',
@@ -538,7 +546,7 @@ class HomeScreen extends Component {
     this.GetMyAddress();
   }
 
-    componentWillMount() { 
+    componentDidMount() { 
         this._getLocationAsync();
     }
 
@@ -572,7 +580,7 @@ class HomeScreen extends Component {
 GetMyAddress = async () => {
   var MyAddress = await GetData('MyAddress');
   if(MyAddress){
-      this.setState({my_address: {Name: MyAddress.first_name + ' '+ MyAddress.last_name,
+      this.setState({added: true, my_address: {Name: MyAddress.first_name + ' '+ MyAddress.last_name,
           Address: MyAddress.Home_Address,
           geocode: (decode(`${MyAddress.Home_Address.slice(0,8)}+${MyAddress.Home_Address.slice(8,11)}`)),
           Phone: MyAddress.phone,
@@ -670,13 +678,17 @@ ShareAddress = () => {
   render(){
 
   return(
+          
           <ScrollView ref="scrollView">
+               <KeyboardAvoidingView style={{ flex: 1 }}
+                keyboardVerticalOffset={-150} behavior={"position"}>
            <View style={{height: 0.175*height, backgroundColor:'#42A5F5', top:0 }}
            />
             <Emergency function={this.goEmergency}/>
             <GetAddress glcode={this.state.glcode} city={this.state.place} color={this.state.color} Share={this.ShareAddress}/>
-            {/* <AddressBook title="Your Addresses"/> */}
-            <AddressBook title = "Add your Home Address" function={this.goMapAdd}/>
+            {(!this.state.added) ? <AddressBook title = "Add your Home Address" function={this.goMapAdd} image={Home}/> : 
+            <AddressBook title = "Addressbook" function={this.goMapAdd} image={Home}/>
+            }
             <Search searchphone={this.state.searchphone}  SearchPhone={this.SearchByPhone} SearchGCode={this.SearchByGCode} phonecolor ={this.state.phonecolor} gcodecolor={this.state.gcodecolor} GoScan={this.GoToScan}/>
             <Card ShowCard ={this.ShowMyInfo} data={this.state.my_address} Share={this.ShareAddress} Car={this.carPressed}/>
             <TouchableOpacity
@@ -685,7 +697,9 @@ ShareAddress = () => {
             >
             <Text style={styles.buttonText}>Signout</Text>
             </TouchableOpacity>
-            </ScrollView>
+            </KeyboardAvoidingView>
+          </ScrollView>
+          
     );
   }
 }
