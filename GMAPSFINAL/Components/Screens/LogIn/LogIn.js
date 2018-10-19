@@ -22,6 +22,7 @@ export default class LoginFlow extends Component {
   }
 
   VerifyPin = async () => {
+    console.log('verifying');
     var path = 'verify';
     var phone = await GetData('PhoneNumber');
     var data = {
@@ -29,6 +30,7 @@ export default class LoginFlow extends Component {
         "pin": this.state.pin,
     }
     const Response = await PostAPI(path, data);
+    console.log(Response);
     if(Response.success){
         StoreData('uid', Response.uidtoken);
         this.props.navigation.navigate('Home');

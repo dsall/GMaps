@@ -11,7 +11,7 @@ const getaddress = require("./api/routes/GetLocation");
 
 
 mongoose.connect(
-  "mongodb+srv://dsall:oftHLBZQfkUK24Oz@test-rbyf3.mongodb.net/gmaps_users",  { useNewUrlParser: true }
+  "mongodb+srv://dsall:oycZskkK8cQaO15q@test-rbyf3.mongodb.net/gmaps_users",  { useNewUrlParser: true }
 );
 
 app.use(morgan("dev"));
