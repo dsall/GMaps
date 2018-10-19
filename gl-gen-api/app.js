@@ -42,6 +42,9 @@ app.use((req, res, next) => {
   error.status = 404;
   next(error);
 });
+app.get('/', (req, res) => {
+  res.send('ok');
+})
 
 
 
