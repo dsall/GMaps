@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-
+//CLQQSWow1x7rHxeo
 const Users_Addresses = require("../models/AddAddress");
 
 
@@ -27,6 +27,7 @@ router.post("/", (req, res, next) => {
     private: req.body.private, 
 
   });
+  console.log(addeddata);
   addeddata
     .save()
     .then(result => {

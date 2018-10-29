@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions , Image, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Dimensions , Image, TouchableOpacity, Linking, Share, Platform} from 'react-native';
 import { BarCodeScanner, Permissions , MapView, Location, Constants} from 'expo';
 import {Paper} from 'react-native-paper';
 import {Icon} from 'react-native-elements';
+import { red100 } from 'react-native-paper/src/styles/colors';
 
 
 const Gmaps = require('../../../Assets/Images/gmapslogo.png');
@@ -19,13 +20,41 @@ const api = require('../../Methods/API/http');
 
 
 class Search extends React.Component {
-  state = {
+constructor(props){
+  super(props);
+  this.state = {
     hasCameraPermission: null,
     scanned: false,
     type: '',
     data: '',
     glcode: '',
+    loadinng: true,
+    searchdata: ''
   }
+}
+componentDidMount(){
+  this.setState({
+    searchdata: this.props.navigation.getParam('search', 'NO-ID')
+  })
+  this.CheckSearchData(this.searchdata);
+}
+
+
+CheckSearchData = (props) => {
+  if(props.search.lenght === 6){
+    console.log('perform contained search')
+  }
+  if(props.search.lenght === 10){
+    console.log('normal search')
+  }
+
+  else {
+    console.log('invalid search data')
+  }
+
+}
+
+
 
 
 
@@ -63,14 +92,117 @@ class Search extends React.Component {
     }
 
 
+   goAddres = (data)  => {
+     var location = decode(data);
+    if (Platform.OS === 'ios') {
+      Linking.openURL(`http://maps.google.com/maps/dir/${this.state.region.latitude},${this.state.region.longitude}/${location.latitudeCenter},${location.longitudeCenter}/`);
+    } else {
+      Linking.openURL(`https://www.google.com/maps/dir/${this.state.region.latitude},${this.state.region.longitude}/${location.latitudeCenter},${location.longitudeCenter}/`);
+    }
+   }
+   ShareAddress = () => {
+    Share.share({
+      message: `Address GMAPS partager:${this.state.glcode}. Vous pouvez l'entrer dans l'application pour localisez la personne.`,
+      title: 'Addresse Sur GMaps'
+      }, {
+        dialogTitle: 'Addresse a partager',
+  
+        tintColor: 'green'
+      })
+      .then(alert('shared'))
+      .catch((error) => this.setState({result: 'error: ' + error.message}));
+    }
+  
 
   render() {
     const { navigation } = this.props;
     const search = navigation.getParam('search', 'NO-ID');
       return(
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text>Search: {JSON.stringify(decode(search))}</Text>
-            <Text>Location: {JSON.stringify(this.state.location)}</Text>
+        <Paper
+        style={{
+          width: 0.95*width,
+          height: 0.20*height,
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center'
+        }}
+        elevation = {7}
+        >
+        <View
+        style={{
+          flex:3,
+
+        }}
+        >
+         <View style={{flexDirection: 'row', alignContent: 'center', alignItems: 'center', justifyContent: 'center', paddingTop: 20}}>
+            <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              
+            }}
+            >G-Code:</Text>
+            <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              letterSpacing: 2,
+            }}
+            >{search.slice(0,4)}</Text>
+            <TouchableOpacity
+            style={{flexDirection: 'row', borderWidth: 2, borderColor: '#42A5F5'}}
+            >
+            <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              letterSpacing: 3,
+            }}
+            >{search.slice(4,7)}</Text>
+            <Text style={{fontSize: 20, color: '#42A5F5', fontWeight: 'bold',}}>-</Text>
+            <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              letterSpacing: 3,
+            }}
+            >{search.slice(7,11)}</Text>
+            </TouchableOpacity>
+          </View>
+
+        </View>
+        <View
+        style={{
+          flex:2,
+          flexDirection: 'row',
+          alignContent: 'center',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+        >
+         <TouchableOpacity>
+          <Icon
+          raised
+          name='directions-car'
+          color='green'
+          onPress={() => {this.goAddres(search)}} />
+          </TouchableOpacity>
+          <TouchableOpacity
+          onPress={this.ShareAddress} 
+          >
+          <Icon
+          raised
+          name='share'
+          color='#42A5F5'
+          />
+          </TouchableOpacity>
+        
+        </View>
+            
+        </Paper>
+
             <Icon 
             containerStyle={{position: 'absolute', bottom: 0,}}
             reverse

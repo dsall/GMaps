@@ -34,7 +34,7 @@ export default class LoginFlow extends Component {
     if(Response.success){
         StoreData('uid', Response.uidtoken);
         this.props.navigation.navigate('Home');
-        // alert('Logged in successfully');
+         alert('Logged in successfully');
     }
     else{
         alert('Wrong pin enterred, try again');
@@ -94,7 +94,7 @@ export default class LoginFlow extends Component {
                   style={{width: 0.20*width, height: 0.2*width}}
                   />
                   <ActivityIndicator   style={{marginTop: 0.25*width}}  size="large" color='#42A5F5'/>
-                  <Text style={{marginTop: 0.25*width, fontSize: 20}}> Sending you a PIN to verify your phone number </Text>
+                  <Text style={{marginTop: 0.25*width, fontSize: 20, textAlign: 'center'}}> Sending you a PIN to verify your phone number </Text>
                 </View>
           </View>
         </Modal>

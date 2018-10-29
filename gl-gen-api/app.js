@@ -8,10 +8,12 @@ const AddingRoute = require("./api/routes/AddAddress");
 const phoneauth = require("./api/routes/phoneauth");
 const verifyphone = require("./api/routes/verify");
 const getaddress = require("./api/routes/GetLocation");
-
+//CLQQSWow1x7rHxeo
 
 mongoose.connect(
-  "mongodb+srv://dsall:oycZskkK8cQaO15q@test-rbyf3.mongodb.net/gmaps_users",  { useNewUrlParser: true }
+  "mongodb+srv://dsall:CLQQSWow1x7rHxeo@test-rbyf3.mongodb.net/gmaps_users"
+
+  ,  { useNewUrlParser: true }
 );
 
 app.use(morgan("dev"));

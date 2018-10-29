@@ -623,8 +623,8 @@ checkAccurracy = () => {
 
 GetCity =  async () =>{
     var Region = await PostAPI('getaddress', {latitude: this.state.region.latitude, longitude: this.state.region.longitude});
-    // console.log(this.state.region);
-    this.setState({place: Region.address, city: Region.city}); 
+     console.log(Region);
+    this.setState({place: Region.city, city: Region.state}); 
 }
 goEmergency = () => {
   this.props.navigation.navigate('Emergency');
@@ -640,7 +640,7 @@ GoToScan = () => {
   this.props.navigation.navigate('Scan');
 }
 goSearch = () =>{
-  this.props.navigation.navigate('Search', {search: search})
+  this.props.navigation.navigate('Search', {search: "849VCWC5+RX"})
 }
 ShowMyInfo = () => {
   this.setState({showInfo: !this.state.showInfo});

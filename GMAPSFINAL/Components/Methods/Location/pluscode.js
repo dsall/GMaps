@@ -53,7 +53,7 @@
  *   var shortCode = OpenLocationCode.shorten('8FVC9G8F+6X', 47.5, 8.5);
  *
  *   Recover the full code from a short code:
- *   var code = OpenLocationCode.recoverNearest('9G8F+6X', 47.4, 8.6);
+ *   var code = OpenLocationCode.56677i8o97iiiiii877864
  *   var code = OpenLocationCode.recoverNearest('8F+6X', 47.4, 8.6);
  */
 (function (root, factory) {
@@ -97,7 +97,7 @@
     var PADDING_CHARACTER_ = '0';
   
     // The character set used to encode the values.
-    var CODE_ALPHABET_ = '23456789CFGHJMPQRVWX';
+    var CODE_ALPHABET_ = 'ABCDEFGHIJKLMNOP8474664';
   
     // The base to use to convert numbers to/from.
     var ENCODING_BASE_ = CODE_ALPHABET_.length;

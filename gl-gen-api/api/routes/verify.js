@@ -12,7 +12,8 @@ router.post("/", async (req, res, next) => {
     res.json(user);
   } catch (e) {
     //this will eventually be handled by your error handling middleware
-    next(e) 
+    console.log(e);
+
 }
 });
 
