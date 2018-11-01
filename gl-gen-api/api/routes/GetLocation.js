@@ -39,7 +39,7 @@ GetCityGLCode = async (glcode) => {
 
 
 router.post("/",   async (req, res, next) => {
-  
+    
     var Results = await (FindCity(req.body.latitude, req.body.longitude));
     console.log(Results);
 
@@ -47,6 +47,7 @@ router.post("/",   async (req, res, next) => {
 });
 
 router.post("/glcode",   async (req, res, next) => {
+    console.log(req.body.GLCODE);
     var response =  await GetCityGLCode(req.body.GLCODE);
     res.send(response);
 });
