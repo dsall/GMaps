@@ -623,8 +623,8 @@ checkAccurracy = () => {
 
 GetCity =  async () =>{
     var Region = await PostAPI('getaddress', {latitude: this.state.region.latitude, longitude: this.state.region.longitude});
-     console.log(Region);
-    this.setState({place: Region.city, city: Region.state}); 
+    //  console.log(Region);
+    this.setState({place: Region.address.city+', '+Region.address.state+', '+Region.address.country}); 
 }
 goEmergency = () => {
   this.props.navigation.navigate('Emergency');

@@ -6,6 +6,9 @@ import {  Location, Constants } from 'expo';
 import {Icon} from 'react-native-elements';
 import {Paper } from 'react-native-paper';
 
+const api = require('../../Methods/API/http');
+const store = require('../../Methods/Storage/Storage');
+
 const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
@@ -33,23 +36,28 @@ const Favorite_Array = [
 
 export default class Emergency extends React.Component {
     state = {
-        location: { coords: {latitude: 0, longitude: 0}},
+        location: { },
         errorMessage: null,
+        phone: ''
         };
 
     componentWillMount() { 
+        this.GetPhoneNumber();
         Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
+    }
+    GetPhoneNumber = async () => {
+        var PhoneNumber = await GetData('PhoneNumber');
+        this.setState({phone: PhoneNumber});
     }
 
     locationChanged = (location) => {
+         this.setState({location: location});
         }
     
-    goPolice = () => {
-        console.log('Police');
-        console.log(JSON.stringify(this.state.location))
-        Communications.textWithoutEncoding('5134490428', JSON.stringify(this.state.location));
+    goPolice = async () => {
         Communications.phonecall('17', true);
-        
+        const response = await PostAPI('suma', { phone: this.state.phone, location: this.state.location});
+        console.log(response);
     }
     goFire = () => {
         Communications.phonecall('18', true);

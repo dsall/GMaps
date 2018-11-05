@@ -97,7 +97,7 @@
     var PADDING_CHARACTER_ = '0';
   
     // The character set used to encode the values.
-    var CODE_ALPHABET_ = 'ABCDEFGHIJKLMNOP8474664';
+    var CODE_ALPHABET_ = '23456789CFGHJMPQRVWX';
   
     // The base to use to convert numbers to/from.
     var ENCODING_BASE_ = CODE_ALPHABET_.length;

@@ -5,6 +5,7 @@ import { FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-
 const encode = require('../../Methods/Location/pluscode').encode;
 const decode = require('../../Methods/Location/pluscode').decode;
 const Storage = require('../../Methods/Storage/Storage');
+const api = require('../../Methods/API/http');
 import {Paper , Searchbar,  Chip, TextInput} from 'react-native-paper';
 const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 let width = Dimensions.get('window').width;
@@ -95,6 +96,7 @@ constructor() {
     }
     GetPhoneNumber = async () => {
         var PhoneNumber = await GetData('PhoneNumber');
+        console.log(PhoneNumber);
         this.setState({phone: PhoneNumber});
     }
 
@@ -127,6 +129,8 @@ constructor() {
     this.setState({
         swcolor: "green",
         prtext: "Private",
+        private: true
+
     })
     }
     else{
@@ -147,14 +151,14 @@ constructor() {
                         phone: this.state.phone,
                         private: this.state.private,         
                     };
-        // console.log(data);
+         console.log(data);
         const Response = await PostAPI('AddAddress', data );
-        // console.log(Response);
+        console.log(Response);
         if(Response){
-          StoreData('MyAddress', Response.AddedAddress);
-          setTimeout( () => {alert('Your address have been stored in our database')}, 1000);
-          this.props.navigation.navigate('Home');   
-        }
+            StoreData('MyAddress', Response.AddedAddress);
+            setTimeout( () => {alert('Your address have been stored in our database')}, 1000);
+            this.props.navigation.navigate('Home');   
+          }
     }
 
 
