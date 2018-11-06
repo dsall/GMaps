@@ -33,12 +33,18 @@ router.post("/", (req, res, next) => {
     res.send("ok");
   });
 
-router.get('/:id', (req, res) => {
-  emergency.findOne({phone: req.params.id})
-  .exec().then((doc)=> { if(doc) {      res.status(200).json({success: true,data: doc});} else {res.send("this person doesn't have their informations")}}).catch((err) => {console.log(err)})
+router.get('/find/:id', (req, res) => {
+  if(req.param.id === "all"){
+    
+  }
+  else{
+    emergency.findOne({phone: req.params.id})
+    .exec().then((doc)=> { if(doc) {      res.status(200).json({success: true,data: doc});} else {res.send("this person doesn't have their informations")}}).catch((err) => {console.log(err)})  
+  }
+
 })
 
-router.get('/suma', (req, res) => {
+router.get('/', (req, res) => {
   emergency.find()
   .exec()
   .then((doc) => {
