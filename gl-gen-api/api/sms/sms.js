@@ -33,19 +33,25 @@ SendLogInVerification = (phonenumber) => {
       pin: Pin,
       time: TimeStamp,
     });
-    if(LoginPin.find({phone: phonenumber})){
-      LoginPin.update({phone: phonenumber}, {$set: {pin: Pin, time: TimeStamp}})
-      .exec()
-      .then(console.log('this phone already existe and data updated'))
-    }
-    else{
+    LoginPin.findOne({phone: phonenumber})
+    .exec()
+    .then((doc)=> {
+      if(doc){
+        LoginPin.update({phone: phonenumber}, {$set: {pin: Pin, time: TimeStamp}})
+        .exec()
+        .then(console.log('this phone already existe and data updated'))
+        .catch((err) => {console.log(err)})
+      }
+      else{
       logandpin
       .save()
       .then(result => console.log('worked'))
       .catch(err => {
       console.log(err);
       })
-    }
+      }
+    })
+
 }).catch(error =>{
   console.log(error);
 })}
