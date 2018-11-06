@@ -35,8 +35,23 @@ router.post("/", (req, res, next) => {
 
 router.get('/:id', (req, res) => {
   emergency.findOne({phone: req.params.id})
-  .exec().then((doc)=> { if(doc) {res.send(doc)} else {res.send("this person doesn't have their informations")}}).catch((err) => {console.log(err)})
+  .exec().then((doc)=> { if(doc) {      res.status(200).json({success: true,data: doc});} else {res.send("this person doesn't have their informations")}}).catch((err) => {console.log(err)})
 })
 
+router.get('/suma', (req, res) => {
+  emergency.find()
+  .exec()
+  .then((doc) => {
+    if(doc) {
+      res.status(200).json({
+        success: true,
+        data: doc
+      });
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+})
 
 module.exports = router;

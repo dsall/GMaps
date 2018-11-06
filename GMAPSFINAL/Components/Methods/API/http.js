@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const Link = 'https://a7adb0e0.ngrok.io/';
+const Link = 'https://fc72d3d1.ngrok.io/';
 
 PostAPI = async (path, data) =>{
     try {
